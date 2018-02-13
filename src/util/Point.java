@@ -1,0 +1,29 @@
+// Crack Search Project
+// Andrew Nickells
+// 201123012
+// u5an
+// A.P.Nickells@student.liverpool.ac.uk
+// University of Liverpool
+
+package util;
+
+/**
+ * util.Point
+ *
+ * Basic point class
+ */
+public class Point {
+
+    public int x;
+    public int y;
+
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public Point() {
+        x = 0;
+        y = 0;
+    }
+}
