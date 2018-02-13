@@ -1,7 +1,16 @@
+// Crack Search Project
+// Andrew Nickells
+// 201123012
+// u5an
+// A.P.Nickells@student.liverpool.ac.uk
+// University of Liverpool
+
 import java.util.List;
 
 /**
- * Created by Andy on 12/02/2018.
+ * Route
+ *
+ * Contains methods and variables for storing the route taken by a robot
  */
 public class Route {
 

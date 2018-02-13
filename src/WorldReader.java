@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * WorldReader.java
  *
- * Logic to read and write worlds to storage.
+ * Logic to read worlds to storage.
  *
  * World files are stored in the following format.
  * [SOH][width][height][num robots][num cracks][crack array]

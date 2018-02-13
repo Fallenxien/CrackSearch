@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * frmWorldDesigner.java
+ * frmWorldDesigner
  *
  * Holds all code for creating and managing the World Designer form and all associated events.
  */

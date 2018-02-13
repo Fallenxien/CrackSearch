@@ -1,3 +1,10 @@
+// Crack Search Project
+// Andrew Nickells
+// 201123012
+// u5an
+// A.P.Nickells@student.liverpool.ac.uk
+// University of Liverpool
+
 import java.util.List;
 
 /**
@@ -22,6 +29,10 @@ public abstract class ExplorationAlgorithm {
         calculateRoute();
     }
 
+    /**
+     * Returns the route calculated by the exploration algorithm
+     * @return Route between cracks
+     */
     public Route getRoute() {
         return route;
     }
@@ -29,14 +40,13 @@ public abstract class ExplorationAlgorithm {
     /**
      * Calculates a route to navigate the cracks given via the constructor. The route created
      * will depend upon the algorithm used by the implementation.
-     * @return
      */
     protected abstract void calculateRoute();
 
     /**
      * Calculates the length of the given route. The default implementation of this method assumes
      * that the length is equal to
-     * @return
+     * @return the weight or length of the route returned by getRoute
      */
     protected abstract double calculateRouteLength();
 

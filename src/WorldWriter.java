@@ -13,7 +13,7 @@ import java.util.ListIterator;
 /**
  * WorldWriter.java
  *
- * Logic to read and write worlds to storage.
+ * Logic to write worlds to storage.
  *
  * World files are stored in the following format.
  * [SOH][width][height][num robots][num cracks][crack array]
