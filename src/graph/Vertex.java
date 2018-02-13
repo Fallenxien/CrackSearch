@@ -1,15 +1,23 @@
+// Crack Search Project
+// Andrew Nickells
+// 201123012
+// u5an
+// A.P.Nickells@student.liverpool.ac.uk
+// University of Liverpool
+
+
 package graph;
 
 import java.util.HashMap;
 import util.Point;
 
 /**
- * Created by Andy on 13/02/2018.
+ *
  */
 public class Vertex {
 
-    Point position;
-    HashMap<Vertex, Edge> connections;
+    private Point position;
+    private HashMap<Vertex, Edge> connections;
 
     public Vertex(Point pos) {
         position = pos;

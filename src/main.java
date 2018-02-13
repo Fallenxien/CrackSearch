@@ -9,7 +9,6 @@ public class main {
 
     public static void main(String[] args) {
 
-
         frmWorldDesigner main_form = new frmWorldDesigner();
         main_form.show();
 

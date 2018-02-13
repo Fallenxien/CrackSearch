@@ -1,15 +1,28 @@
+// Crack Search Project
+// Andrew Nickells
+// 201123012
+// u5an
+// A.P.Nickells@student.liverpool.ac.uk
+// University of Liverpool
+
+
 package graph;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import util.Point;
 
 /**
- * Created by Andy on 13/02/2018.
+ * graph.Graph
+ *
+ * Contains methods and variables describing a Graph.
+ *
+ * Also contains static methods for common graph functionality.
  */
 public class Graph {
 
-    List<Vertex> verts;
+    private List<Vertex> verts;
 
     public Graph() {
         verts = new LinkedList<>();
@@ -36,31 +49,39 @@ public class Graph {
         Edge e = new Edge(v1, v2, weight);
         v1.addEdge(v2, e);
         v2.addEdge(v1, e);
+    }
 
+    public int getNumVertices() {
+        return verts.size();
+    }
+
+    public boolean contains(Vertex v) {
+        return verts.contains(v);
     }
 
     /**
+     *
      * adds all edges to the current graph such that when the function finishes
      * the graph is a 'complete' graph.
      */
-    public void completeGraph() {
+    public static void completeGraph(Graph g) {
 
-        // make sure graph has at least 2 verticies
-        if (verts.size() >=  2) {
+        // make sure graph has at least 2 vertices
+        if (g.getNumVertices() >=  2) {
 
             ListIterator<Vertex> i, j;      // two iterators to walk through list
             int counter;                    // counts progression through iterator
             Vertex v1, v2;                  // comparison placeholders
 
-            i = verts.listIterator();
+            i = g.verts.listIterator();
             counter = 1;
             // for every vertex in list, connect it to every other vertex
             while (i.hasNext()) {
                 v1 = i.next();
-                j = verts.listIterator(counter);
+                j = g.verts.listIterator(counter);
                 while (j.hasNext()) {
                     v2 = j.next();
-                    addEdge(v1, v2);
+                    g.addEdge(v1, v2);
                 }
                 counter++;
             }

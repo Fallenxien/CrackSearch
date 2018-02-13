@@ -1,26 +1,35 @@
+// Crack Search Project
+// Andrew Nickells
+// 201123012
+// u5an
+// A.P.Nickells@student.liverpool.ac.uk
+// University of Liverpool
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.GeneralPath;
+import util.Point;
 
 /**
- * Created by Andy on 02/02/2018.
+ * PanelWorldDesigner
+ *
+ * Contains classes and methods for drawing and editing the world using the world designer panel
  */
-public class PanelDesigner extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
+public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
 
     private enum CrackDrawingState {
         IDLE, DRAWING_EDGE
-
     }
 
     World world;
     private CrackDrawingState drawingState;
-    util.Point[] drawingPoints;
-    int currentDrawingPoint;
-    GeneralPath path;
-    util.Point mouseLocation;
+    private Point[] drawingPoints;
+    private int currentDrawingPoint;
+    private GeneralPath path;
+    private util.Point mouseLocation;
 
-    public PanelDesigner() {
+    public PanelWorldDesigner() {
         super();
         world = new World();
         drawingState = CrackDrawingState.IDLE;
@@ -96,9 +105,7 @@ public class PanelDesigner extends JPanel implements MouseListener, MouseMotionL
         if (currentDrawingPoint > 1) {
             // clean up point array
             util.Point[] tmp = new util.Point[currentDrawingPoint];
-            for (int i = 0; i < currentDrawingPoint; i++) {
-                tmp[i] = drawingPoints[i];
-            }
+            System.arraycopy(drawingPoints, 0, tmp, 0, currentDrawingPoint);
             world.addCrack(new Crack(tmp, 0));
         }
 

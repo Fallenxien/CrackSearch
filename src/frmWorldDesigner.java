@@ -25,7 +25,7 @@ public class frmWorldDesigner implements ActionListener {
 
     private JFrame frame;
     private JPanel pnlContainer;
-    private PanelDesigner pnlDesigner;
+    private PanelWorldDesigner pnlDesigner;
     private JMenuItem menuItemSave;
 
     private File worldFile;
@@ -48,7 +48,7 @@ public class frmWorldDesigner implements ActionListener {
 
         frame = new JFrame("Crack Search");
         frame.setContentPane(this.pnlContainer);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
 
         buildMenuBar();
