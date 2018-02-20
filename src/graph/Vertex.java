@@ -12,7 +12,9 @@ import java.util.HashMap;
 import util.Point;
 
 /**
+ * Graph
  *
+ * Contains methods and properties describing a vertex in a Graph
  */
 public class Vertex {
 
@@ -29,6 +31,10 @@ public class Vertex {
 
     public int getY() {
         return position.y;
+    }
+
+    public Point getPoint() {
+        return position;
     }
 
     public void addEdge(Vertex target, Edge e) {

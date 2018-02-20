@@ -5,6 +5,9 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
+import util.Point;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,11 +17,21 @@ import java.util.List;
  */
 public class Route {
 
-    private List<Crack> route;
+    private List<RouteLocation> route;
+    private int numLocations;
     private int currentIndex;
 
-    public Route() {
+    public Route(int max_locations) {
+
+        route = new ArrayList<>(max_locations);
+        currentIndex = 0;
+        numLocations = 0;
 
     }
+
+    public void addSegment(Point start, Point end, RouteLocation.RouteType type) {
+        route.add(new RouteLocation(start, end, type));
+    }
+
 
 }

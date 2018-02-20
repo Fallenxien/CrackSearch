@@ -23,6 +23,7 @@ import util.Point;
 public class Graph {
 
     private List<Vertex> verts;
+    private List<Edge> edges;
 
     public Graph() {
         verts = new LinkedList<>();
@@ -49,10 +50,40 @@ public class Graph {
         Edge e = new Edge(v1, v2, weight);
         v1.addEdge(v2, e);
         v2.addEdge(v1, e);
+        edges.add(e);
+    }
+
+    public void addEdge(Edge e) {
+        e.getStart().addEdge(e.getEnd(), e);
+        e.getEnd().addEdge(e.getStart(), e);
+        edges.add(e);
+    }
+
+    public void removeEdge(Edge e) {
+        e.getStart().removeEdge(e.getEnd(), e);
+        e.getEnd().removeEdge(e.getStart(), e);
+        edges.remove(e);
+    }
+
+    public ListIterator<Edge> getEdgeIterator() {
+        return edges.listIterator();
+    }
+
+    public ListIterator<Edge> getSortedEdgeIterator() {
+        edges.sort(null);
+        return edges.listIterator();
+    }
+
+    public ListIterator<Vertex> getVertexIterator() {
+        return verts.listIterator();
     }
 
     public int getNumVertices() {
         return verts.size();
+    }
+
+    public int getNumEdges() {
+        return edges.size();
     }
 
     public boolean contains(Vertex v) {

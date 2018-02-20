@@ -12,7 +12,7 @@ package graph;
  *
  * Represents an edge within a graph
  */
-public class Edge {
+public class Edge implements Comparable<Edge> {
 
     private Vertex start;
     private Vertex end;
@@ -36,4 +36,16 @@ public class Edge {
         return end;
     }
 
+    @Override
+    public int compareTo(Edge o) {
+
+        if (getWeight() - o.getWeight() > 0) {
+            return 1;
+        } else if (getWeight() - o.getWeight() < 0) {
+            return -1;
+        } else {
+            return 0;
+        }
+
+    }
 }
