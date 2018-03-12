@@ -29,8 +29,8 @@ public class Route {
 
     }
 
-    public void addSegment(Point start, Point end, RouteLocation.RouteType type) {
-        route.add(new RouteLocation(start, end, type));
+    public void addSegment(Point start, Point end, Double weight, RouteLocation.RouteType type) {
+        route.add(new RouteLocation(start, end, weight, type));
     }
 
 

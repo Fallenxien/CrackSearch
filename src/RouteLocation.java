@@ -27,10 +27,12 @@ public class RouteLocation {
     private Point start_location;
     private Point end_location;
     private RouteType type;
+    private Double weight;
 
-    public RouteLocation(Point start, Point end, RouteType type) {
+    public RouteLocation(Point start, Point end, Double weight, RouteType type) {
         this.start_location = start;
         this.end_location = end;
+        this.weight = weight;
         this.type = type;
     }
 
