@@ -9,6 +9,7 @@ import util.Point;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Route
@@ -29,8 +30,32 @@ public class Route {
 
     }
 
+    /**
+     * Adds a segment to the route.
+     * @param start Start of the segment
+     * @param end End of the segment
+     * @param weight Weight of the segment
+     * @param type Type of segment
+     */
     public void addSegment(Point start, Point end, Double weight, RouteLocation.RouteType type) {
         route.add(new RouteLocation(start, end, weight, type));
+        numLocations++;
+    }
+
+    /**
+     * Returns a list iterator with all locations in the route
+     * @return ListIterator<RouteLocation> list of locations
+     */
+    public ListIterator<RouteLocation> getLocations() {
+        return route.listIterator();
+    }
+
+    /**
+     * Returns number of locations in the list
+     * @return
+     */
+    public int getSize() {
+        return numLocations;
     }
 
 

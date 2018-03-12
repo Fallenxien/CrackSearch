@@ -36,4 +36,11 @@ public class RouteLocation {
         this.type = type;
     }
 
+    /**
+     * Returns the weigh associated with the Route Location
+     * @return weight as a double
+     */
+    public Double getWeight() {
+        return weight;
+    }
 }

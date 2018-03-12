@@ -39,7 +39,6 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
     public MSTAlgorithm(List<Crack> cracks) {
         super(cracks);
 
-
     }
 
     /**
@@ -47,7 +46,7 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
      * is based upon finding a Minimal Spanning Tree.
      */
     @Override
-    public void calculateRoute() {
+    public Route calculateRoute() {
 
         if (cracks.size() > 0) {
 
@@ -67,10 +66,11 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
             Graph t = runKruskals(g);
 
             // create route
-            createRoute(t);
+            return createRoute(t);
 
         }
 
+        return new Route(0);
     }
 
     /**
@@ -78,7 +78,7 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
      * @param g Graph to use to create Minimal Spanning Tree
      * @return Minimal Spanning Tree
      */
-    public Graph runKruskals(Graph g) {
+    private Graph runKruskals(Graph g) {
 
         Graph t = new Graph();
         ListIterator<Edge> i = g.getSortedEdgeIterator();
@@ -104,8 +104,9 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
     /**
      * Creates the route for the robot to follow
      * @param t Tree containing Minimal Spanning tree of the cracks
+     * @return Route finished route for robot to take
      */
-    private void createRoute(Graph t) {
+    private Route createRoute(Graph t) {
 
         Vertex v;
         Route r = new Route(2* (cracks.size() + t.getNumEdges() + 1)); // number of segments in route is 2*(num cracks + num edges + 1)
@@ -119,6 +120,8 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
         runDFS(v, r);
         // add journey back to base
         r.addSegment(v.getPoint(), new Point(0,0), distance_from_origin, RouteLocation.RouteType.TO_BASE);
+
+        return r;
 
     }
 
@@ -176,9 +179,9 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
      * Finds the crack associated with vertex v, and adds it to route r twice
      * (once for each direction)
      * @param v Vertex of crack to add
-     * @param v Route to add crack too
+     * @param r Route to add crack too
      */
-    public void addCrackAtVertexToRoute(Vertex v, Route r) {
+    private void addCrackAtVertexToRoute(Vertex v, Route r) {
 
         // get crack details
         Crack c = findCrackByVertex(v);
@@ -219,11 +222,6 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
 
         return Math.sqrt(Math.pow(v.getX(),2) + Math.pow(v.getY(),2));
 
-    }
-
-    @Override
-    public double calculateRouteLength() {
-        return 0;
     }
 
 }

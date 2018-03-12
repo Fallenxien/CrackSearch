@@ -6,6 +6,7 @@
 // University of Liverpool
 
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * ExplorationAlgorithm
@@ -17,7 +18,7 @@ import java.util.List;
 public abstract class ExplorationAlgorithm {
 
     protected List<Crack> cracks;
-    private Route route;
+    protected Route route;
 
     public ExplorationAlgorithm(List<Crack> cracks) {
         setCrackList(cracks);
@@ -26,7 +27,8 @@ public abstract class ExplorationAlgorithm {
     public void setCrackList(List<Crack> cracks) {
         this.cracks = cracks;
 
-        calculateRoute();
+        route = calculateRoute();
+        calculateRouteLength();
     }
 
     /**
@@ -41,13 +43,22 @@ public abstract class ExplorationAlgorithm {
      * Calculates a route to navigate the cracks given via the constructor. The route created
      * will depend upon the algorithm used by the implementation.
      */
-    protected abstract void calculateRoute();
+    protected abstract Route calculateRoute();
 
     /**
      * Calculates the length of the given route. The default implementation of this method assumes
-     * that the length is equal to
-     * @return the weight or length of the route returned by getRoute
+     * that the length is equal to the weight or length of the route returned by getRoute
+     * @return length of route
      */
-    protected abstract double calculateRouteLength();
+    protected double calculateRouteLength() {
+        double length = 0;
+
+        ListIterator<RouteLocation> i = route.getLocations();
+        while (i.hasNext()) {
+            length += i.next().getWeight();
+        }
+
+        return length;
+    }
 
 }
