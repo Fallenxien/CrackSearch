@@ -111,8 +111,8 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
         Vertex v;
         Route r = new Route(2* (cracks.size() + t.getNumEdges() + 1)); // number of segments in route is 2*(num cracks + num edges + 1)
         // robot starts at origin, so need to find the vertex in G closest to origin
-        v = findClosestToOrigin(t);
-        double distance_from_origin = calcDistanceFromOrigin(v);
+        v = t.findClosestToOrigin();
+        double distance_from_origin = Graph.calcDistanceFromOrigin(v);
 
         // add journey from base to tree
         r.addSegment(new Point(0,0), v.getPoint(), distance_from_origin, RouteLocation.RouteType.FROM_BASE);
@@ -145,33 +145,6 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
             runDFS(child,r);
             r.addSegment(child.getPoint(), v.getPoint(), e.getWeight(), RouteLocation.RouteType.BETWEEN_CRACK); // add journey back
         }
-
-    }
-
-    /**
-     * Finds the vertex that is closest to the origin for a given graph
-     * @param g The graph to use
-     * @return Vertex that is closest to the origin
-     */
-    private Vertex findClosestToOrigin(Graph g) {
-
-        ListIterator<Vertex> nodes = (g.getVertexIterator());
-        Vertex v, min_v;
-        double min_v_distance, v_distance;
-
-        min_v = nodes.next();
-        min_v_distance = calcDistanceFromOrigin(min_v);
-
-        while (nodes.hasNext()) {
-            v = nodes.next();
-            v_distance = calcDistanceFromOrigin(v);
-            if (v_distance < min_v_distance) {
-                min_v = v;
-                min_v_distance = v_distance;
-            }
-        }
-
-        return min_v;
 
     }
 
@@ -213,15 +186,6 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
         return null;
     }
 
-    /**
-     * Calculates the distance from the origin of the given vertex.
-     * @param v the vertex to get distance from origin
-     * @return the distance from the origin
-     */
-    private double calcDistanceFromOrigin(Vertex v) {
 
-        return Math.sqrt(Math.pow(v.getX(),2) + Math.pow(v.getY(),2));
-
-    }
 
 }

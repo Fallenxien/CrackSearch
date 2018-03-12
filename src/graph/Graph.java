@@ -133,5 +133,43 @@ public class Graph {
         return Math.sqrt(xdiff + ydiff);
     }
 
+    /**
+     * Finds the vertex that is closest to the origin for a given graph
+     * @param g The graph to use
+     * @return Vertex that is closest to the origin
+     */
+    public Vertex findClosestToOrigin() {
+
+        ListIterator<Vertex> nodes = getVertexIterator();
+        Vertex v, min_v;
+        double min_v_distance, v_distance;
+
+        min_v = nodes.next();
+        min_v_distance = calcDistanceFromOrigin(min_v);
+
+        while (nodes.hasNext()) {
+            v = nodes.next();
+            v_distance = calcDistanceFromOrigin(v);
+            if (v_distance < min_v_distance) {
+                min_v = v;
+                min_v_distance = v_distance;
+            }
+        }
+
+        return min_v;
+
+    }
+
+    /**
+     * Calculates the distance from the origin of the given vertex.
+     * @param v the vertex to get distance from origin
+     * @return the distance from the origin
+     */
+    public static double calcDistanceFromOrigin(Vertex v) {
+
+        return Math.sqrt(Math.pow(v.getX(),2) + Math.pow(v.getY(),2));
+
+    }
+
 
 }
