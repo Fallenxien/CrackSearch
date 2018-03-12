@@ -48,20 +48,20 @@ public class Graph {
     public void addEdge(Vertex v1, Vertex v2) {
         double weight = calcDistance(v1, v2);
         Edge e = new Edge(v1, v2, weight);
-        v1.addEdge(v2, e);
-        v2.addEdge(v1, e);
+        v1.addEdge(e);
+        v2.addEdge(e);
         edges.add(e);
     }
 
     public void addEdge(Edge e) {
-        e.getStart().addEdge(e.getEnd(), e);
-        e.getEnd().addEdge(e.getStart(), e);
+        e.getStart().addEdge(e);
+        e.getEnd().addEdge(e);
         edges.add(e);
     }
 
     public void removeEdge(Edge e) {
-        e.getStart().removeEdge(e.getEnd(), e);
-        e.getEnd().removeEdge(e.getStart(), e);
+        e.getStart().removeEdge(e);
+        e.getEnd().removeEdge(e);
         edges.remove(e);
     }
 
@@ -135,7 +135,6 @@ public class Graph {
 
     /**
      * Finds the vertex that is closest to the origin for a given graph
-     * @param g The graph to use
      * @return Vertex that is closest to the origin
      */
     public Vertex findClosestToOrigin() {
