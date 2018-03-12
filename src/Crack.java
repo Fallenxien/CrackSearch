@@ -34,6 +34,14 @@ public class Crack {
         return points[index];
     }
 
+    public Point getStart() {
+        return points[0];
+    }
+
+    public Point getEnd() {
+        return points[points.length-1];
+    }
+
     public int getLength() {
         return length;
     }
