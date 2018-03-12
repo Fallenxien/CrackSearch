@@ -42,6 +42,10 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
 
     }
 
+    /**
+     * Calculates a route to navigate the cracks given via the constructor. The route created
+     * is based upon finding a Minimal Spanning Tree.
+     */
     @Override
     public void calculateRoute() {
 
@@ -82,9 +86,14 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
 
         while (i.hasNext()) {
             e = i.next();
-            if (!t.contains(e.getStart()) && !t.contains(e.getEnd())) {
-                t.addVertex(e.getStart());
-                t.addVertex(e.getEnd());
+            // check both verts are not already in graph
+            if (!(t.contains(e.getStart()) && t.contains(e.getEnd()))) {
+                // check which is missing and add it
+                if (t.contains(e.getStart())) {
+                    t.addVertex(e.getEnd());
+                } else {
+                    t.addVertex(e.getStart());
+                }
                 t.addEdge(e);
             }
         }
@@ -92,20 +101,47 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
         return t;
     }
 
-    private void createRoute(Graph g) {
+    /**
+     * Creates the route for the robot to follow
+     * @param t Tree containing Minimal Spanning tree of the cracks
+     */
+    private void createRoute(Graph t) {
 
         Vertex v;
-        Crack c;
-        Edge e;
-        Route r = new Route(2* (cracks.size() + g.getNumEdges() + 1)); // number of segments in route is 2*(num cracks + num edges + 1)
+        Route r = new Route(2* (cracks.size() + t.getNumEdges() + 1)); // number of segments in route is 2*(num cracks + num edges + 1)
         // robot starts at origin, so need to find the vertex in G closest to origin
-        v = findClosestToOrigin(g);
-        c = findCrackByVertex(v);
-        r.addSegment(new Point(0,0), v.getPoint(), RouteLocation.RouteType.FROM_BASE);
+        v = findClosestToOrigin(t);
+        double distance_from_origin = calcDistanceFromOrigin(v);
 
+        // add journey from base to tree
+        r.addSegment(new Point(0,0), v.getPoint(), distance_from_origin, RouteLocation.RouteType.FROM_BASE);
         // loop through tree adding nodes to route
+        runDFS(v, r);
+        // add journey back to base
+        r.addSegment(v.getPoint(), new Point(0,0), distance_from_origin, RouteLocation.RouteType.TO_BASE);
 
+    }
 
+    /**
+     * Runs a Depth First Search Algorithm to produce the route the robot will follow
+     * @param v The current vertex the robot is at
+     * @param r The route to write too
+     */
+    private void runDFS(Vertex v, Route r) {
+
+        // 2x length of crack at v
+        addCrackAtVertexToRoute(v,r);
+
+        Vertex child;
+        Edge e;
+        ListIterator<Edge> i = v.getEdges();
+        while (i.hasNext()) {
+            e = i.next();
+            child = Edge.getAssociatedVertex(e,v);
+            r.addSegment(v.getPoint(), child.getPoint(), e.getWeight(), RouteLocation.RouteType.BETWEEN_CRACK); // add journey to next crack
+            runDFS(child,r);
+            r.addSegment(child.getPoint(), v.getPoint(), e.getWeight(), RouteLocation.RouteType.BETWEEN_CRACK); // add journey back
+        }
 
     }
 
@@ -116,15 +152,15 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
      */
     private Vertex findClosestToOrigin(Graph g) {
 
-        ListIterator<Vertex> verts = g.getVertexIterator();
+        ListIterator<Vertex> nodes = (g.getVertexIterator());
         Vertex v, min_v;
         double min_v_distance, v_distance;
 
-        min_v = verts.next();
+        min_v = nodes.next();
         min_v_distance = calcDistanceFromOrigin(min_v);
 
-        while (verts.hasNext()) {
-            v = verts.next();
+        while (nodes.hasNext()) {
+            v = nodes.next();
             v_distance = calcDistanceFromOrigin(v);
             if (v_distance < min_v_distance) {
                 min_v = v;
@@ -134,6 +170,24 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
 
         return min_v;
 
+    }
+
+    /**
+     * Finds the crack associated with vertex v, and adds it to route r twice
+     * (once for each direction)
+     * @param v Vertex of crack to add
+     * @param v Route to add crack too
+     */
+    public void addCrackAtVertexToRoute(Vertex v, Route r) {
+
+        // get crack details
+        Crack c = findCrackByVertex(v);
+        Point start = c.getPoint(0);
+        Point end = c.getPoint(c.numPoints()-1);
+
+        // add twice, once for each direction
+        r.addSegment(start, end, (double) c.getLength(), RouteLocation.RouteType.CRACK);
+        r.addSegment(end, start, (double) c.getLength(), RouteLocation.RouteType.CRACK);
     }
 
     /**

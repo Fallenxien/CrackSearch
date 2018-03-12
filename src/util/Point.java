@@ -26,4 +26,8 @@ public class Point {
         x = 0;
         y = 0;
     }
+
+    public boolean equals(Point p) {
+        return (p.x == x && p.y == y);
+    }
 }

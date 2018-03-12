@@ -48,4 +48,18 @@ public class Edge implements Comparable<Edge> {
         }
 
     }
+
+    /**
+     * Gets the vertex associated with the given vertex, based upon edge
+     * @param e Edge containing to verticies
+     * @param v Vertex you do not wish to retrieve
+     * @return Other vertex on edge
+     */
+    public static Vertex getAssociatedVertex(Edge e, Vertex v) {
+        if (e.getStart() == v) {
+            return e.getEnd();
+        } else {
+            return e.getStart();
+        }
+    }
 }

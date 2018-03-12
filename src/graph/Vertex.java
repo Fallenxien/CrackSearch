@@ -9,6 +9,9 @@
 package graph;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+
 import util.Point;
 
 /**
@@ -20,6 +23,7 @@ public class Vertex {
 
     private Point position;
     private HashMap<Vertex, Edge> connections;
+    private List<Edge> relations;
 
     public Vertex(Point pos) {
         position = pos;
@@ -37,14 +41,18 @@ public class Vertex {
         return position;
     }
 
-    public void addEdge(Vertex target, Edge e) {
-        if (!connections.containsKey(target)) {
-            connections.put(target, e);
+    public ListIterator<Edge> getEdges() {
+        return relations.listIterator();
+    }
+
+    public void addEdge(Edge e) {
+        if (!relations.contains(e)) {
+            relations.add(e);
         }
     }
 
-    public void removeEdge(Vertex target, Edge e) {
-            connections.remove(target, e);
+    public void removeEdge(Edge e) {
+        relations.remove(e);
     }
 
 }
