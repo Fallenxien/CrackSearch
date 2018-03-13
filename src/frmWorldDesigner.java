@@ -22,10 +22,12 @@ public class frmWorldDesigner implements ActionListener {
     private final static String OPEN_COMMAND = "open";
     private final static String SAVE_COMMAND = "save";
     private final static String SAVE_AS_COMMAND = "save_as";
+    private final static String ENTER_DRAW_MODE = "draw_mode";
 
     private JFrame frame;
     private JPanel pnlContainer;
     private PanelWorldDesigner pnlDesigner;
+    private JButton btnDrawMode;
     private JMenuItem menuItemSave;
 
     private File worldFile;
@@ -52,6 +54,9 @@ public class frmWorldDesigner implements ActionListener {
         frame.pack();
 
         buildMenuBar();
+
+        btnDrawMode.setActionCommand(ENTER_DRAW_MODE);
+        btnDrawMode.addActionListener(this);
 
     }
 
@@ -131,6 +136,8 @@ public class frmWorldDesigner implements ActionListener {
             case SAVE_COMMAND:
                 saveWorld(getWorldFile());
                 break;
+            case ENTER_DRAW_MODE:
+                pnlDesigner.enterDrawingMode();
         }
 
     }

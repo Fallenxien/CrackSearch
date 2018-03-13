@@ -64,6 +64,7 @@ public class World {
 
         crackList = new LinkedList<>();
         robotList = new ArrayList<>(MAX_ROBOTS);
+        robotList.add(new Robot(crackList));
 
     }
 
@@ -100,7 +101,7 @@ public class World {
     }
 
     public void drawRobot(Graphics2D g) {
-
+        robotList.get(0).drawRobot(g);
     }
 
 }
