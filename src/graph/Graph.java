@@ -22,11 +22,12 @@ import util.Point;
  */
 public class Graph {
 
-    private List<Vertex> verts;
+    private final List<Vertex> verts;
     private List<Edge> edges;
 
     public Graph() {
         verts = new LinkedList<>();
+        edges = new LinkedList<>();
     }
 
     public Graph(List<Vertex> vertices) {

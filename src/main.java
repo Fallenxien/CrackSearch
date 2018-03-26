@@ -5,6 +5,7 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
+@SuppressWarnings("MethodNameSameAsClassName")
 public class main {
 
     public static void main(String[] args) {

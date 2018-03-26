@@ -18,7 +18,7 @@ import java.util.ListIterator;
  */
 public class Route {
 
-    private List<RouteLocation> route;
+    private final List<RouteLocation> route;
     private int numLocations;
     private int currentIndex;
 
@@ -52,11 +52,80 @@ public class Route {
 
     /**
      * Returns number of locations in the list
-     * @return
+     * @return Size as int
      */
     public int getSize() {
         return numLocations;
     }
+
+    /**
+     * Calculates the total length of the route
+     * @return total length of route
+     */
+    public double getTotalLength() {
+        double length = 0;
+
+        for (RouteLocation step : route) {
+            length += step.getWeight();
+        }
+
+        return length;
+    }
+
+    /**
+     * Calculates the total length of the route
+     * @return total length of route
+     */
+    public double getTotalCrackLength() {
+        double length = 0;
+
+        for (RouteLocation rl : route) {
+            if (rl.getType() == RouteLocation.RouteType.CRACK)
+                length += rl.getWeight();
+        }
+
+        return length;
+    }
+
+    /**
+     * Gets the total crack length walked by the route
+     * @return total crack length
+     */
+    public double getTotalBetweenCrackLength() {
+        double length = 0;
+
+        for (RouteLocation rl : route) {
+            if (rl.getType() == RouteLocation.RouteType.BETWEEN_CRACK)
+                length += rl.getWeight();
+        }
+
+        return length;
+    }
+
+    /**
+     * Gets the total length between the base and the start/end nodes
+     * @return total between base length
+     */
+    public double getTotalBetweenBaseLength() {
+        double length = 0;
+
+        for (RouteLocation rl : route) {
+            if (rl.getType() == RouteLocation.RouteType.TO_BASE || rl.getType() == RouteLocation.RouteType.FROM_BASE)
+                length += rl.getWeight();
+        }
+
+        return length;
+    }
+
+    /**
+     * Gets the total intermediate length walked by the route (Between cracks and to/from base)
+     * @return total intermediate length
+     */
+    public double getTotalIntermediateLength() {
+        return getTotalBetweenBaseLength() + getTotalBetweenCrackLength();
+    }
+
+
 
 
 }

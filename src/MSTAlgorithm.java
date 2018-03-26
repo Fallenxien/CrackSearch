@@ -162,8 +162,8 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
         Point end = c.getPoint(c.numPoints()-1);
 
         // add twice, once for each direction
-        r.addSegment(start, end, (double) c.getLength(), RouteLocation.RouteType.CRACK);
-        r.addSegment(end, start, (double) c.getLength(), RouteLocation.RouteType.CRACK);
+        r.addSegment(start, end, c.getLength(), RouteLocation.RouteType.CRACK);
+        r.addSegment(end, start, c.getLength(), RouteLocation.RouteType.CRACK);
     }
 
     /**
@@ -184,6 +184,15 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
         }
 
         return null;
+    }
+
+    /**
+     * Returns with algorithm name.
+     * @return "MST"
+     */
+    @SuppressWarnings("SameReturnValue")
+    public static String getAlgorithmName() {
+        return "MST";
     }
 
 

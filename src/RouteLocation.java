@@ -14,6 +14,7 @@ import util.Point;
  *
  * Also contains static methods for common graph functionality.
  */
+@SuppressWarnings("ALL")
 public class RouteLocation {
 
     /**
@@ -29,11 +30,12 @@ public class RouteLocation {
     private RouteType type;
     private Double weight;
 
-    public RouteLocation(Point start, Point end, Double weight, RouteType type) {
-        this.start_location = start;
-        this.end_location = end;
-        this.weight = weight;
-        this.type = type;
+    /**
+     * Get the type for the current route section
+     * @return RouteType
+     */
+    public RouteType getType() {
+        return type;
     }
 
     /**
@@ -43,4 +45,17 @@ public class RouteLocation {
     public Double getWeight() {
         return weight;
     }
+
+
+
+    public RouteLocation(Point start, Point end, Double weight, RouteType type) {
+        this.start_location = start;
+        this.end_location = end;
+        this.weight = weight;
+        this.type = type;
+    }
+
+
+
+
 }

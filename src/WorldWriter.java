@@ -18,20 +18,22 @@ import java.util.ListIterator;
  * World files are stored in the following format.
  * [SOH][width][height][num robots][num cracks][crack array]
  *
- * All numbers are stored as integer (4 bytes)
- *
  * Where crack array is continuous blocks each representing a crack. Each block
  * takes on the format:
  * [num points][crack length][x1][y1][x2][y2][xn][yn]
+ *
+ * All numbers except crack length are stored as integers. (4 bytes)
+ * Crack length is stored as a double. (8 bytes)
+ *
  */
 public class WorldWriter {
 
     private static final byte SOH = 0x1;
 
-    File f;
-    World w;
+    private final File f;
+    private final World w;
 
-    public WorldWriter(File f, World w) throws IOException{
+    public WorldWriter(File f, World w) {
         this.f = f;
         this.w = w;
     }
@@ -61,7 +63,7 @@ public class WorldWriter {
         while (cracks.hasNext()) {
             c = cracks.next();
             writer.writeInt(c.numPoints());
-            writer.writeInt(c.getLength());
+            writer.writeDouble(c.getLength());
 
             for (int j = 0; j < c.numPoints(); j++) {
                 p = c.getPoint(j);

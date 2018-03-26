@@ -9,6 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.GeneralPath;
+import java.util.*;
+import java.util.List;
+
 import util.Point;
 
 /**
@@ -27,7 +30,8 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     private Point[] drawingPoints;
     private int currentDrawingPoint;
     private GeneralPath path;
-    private util.Point mouseLocation;
+    private final util.Point mouseLocation;
+    private final List<SimulationFinishedListener> simFinishedListeners;
 
     public PanelWorldDesigner() {
         super();
@@ -35,6 +39,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         worldState = WorldState.NOT_DRAWING;
         mouseLocation = new util.Point();
         setDoubleBuffered(true);    // TODO: try improve double buffering with BufferStrategy
+        simFinishedListeners = new LinkedList<>();
         // add listeners
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
@@ -42,9 +47,21 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
 
     }
 
+    /**
+     * Registers a simulation finished listener.
+     * @param listener listener to register
+     */
+    public void addSimulationFinishedListener(SimulationFinishedListener listener) {
+        simFinishedListeners.add(listener);
+    }
+
+    /**
+     * Sets the world object.
+     * @param w world object to use
+     */
     public void setWorld(World w){
         world = w;
-        update(getGraphics());
+        update(getGraphics());      // send draw request
     }
 
     @Override
@@ -58,6 +75,10 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         }
     }
 
+    /**
+     * paints the crack that is currently being drawn to the graphics object
+     * @param g Graphics object to paint too
+     */
     private void paintDrawingCrack(Graphics2D g) {
 
         util.Point last_confirmed_point =  drawingPoints[currentDrawingPoint - 1];
@@ -98,6 +119,16 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
 
     }
 
+    /**
+     * Starts multi segment drawing mode. Marks the current mouse location as the start of the
+     * crack and awaits another click to determine the next location, until the enter key is
+     * pressed. While the designer is in MULTI_SEGMENT_MODE it will draw a line between the last
+     * point position and the cursor location.
+     *
+     * *** NOT CURRENTLY IMPLEMENTED ***
+     * TODO: implement multi segment feature
+     * @param e MouseEvent containing mouse position
+     */
     private void startDrawingMultiSegment(MouseEvent e) {
         worldState = WorldState.MULTI_SEGMENT_MODE;
         drawingPoints = new util.Point[Crack.MAX_POINTS];
@@ -143,10 +174,64 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
             // clean up point array
             util.Point[] tmp = new util.Point[currentDrawingPoint];
             System.arraycopy(drawingPoints, 0, tmp, 0, currentDrawingPoint);
-            world.addCrack(new Crack(tmp, 0));
+            double length = calcLength(tmp);
+            world.addCrack(new Crack(tmp, length));
         }
         update(getGraphics());
         worldState = WorldState.NOT_DRAWING;
+    }
+
+    /**
+     * Calculates the length of a given set of points.
+     * @param crack Point array associated with the crack
+     * @return length of crack as int
+     */
+    private Double calcLength(Point[] crack) {
+
+        double length = 0;
+
+        for (int i = 1;i < crack.length;i++) {
+            length += calcDistanceBetween(crack[i-1], crack[i]);
+        }
+
+        return length;
+    }
+
+    /**
+     * Calculates the distance between 2 points
+     * @param p1 point 1
+     * @param p2 point 2
+     * @return distance between points
+     */
+    private Double calcDistanceBetween(Point p1, Point p2) {
+        double xdiff = p1.x - p2.x;
+        double ydiff = p1.y - p2.y;
+
+        return Math.sqrt(xdiff*xdiff + ydiff*ydiff);
+    }
+
+    /**
+     * Runs simulation for the current world / algorithm. When simulation has finished calls
+     * sim finished listeners to notify of completion.
+     */
+    public void runSimulation() {
+
+        // currently no animation, so simulation can finish immediately.
+        // call the sim finished event to notify all listeners
+        Route r = world.getRoute();
+
+        for (SimulationFinishedListener listener : simFinishedListeners) {
+            listener.simulationFinished(r);
+        }
+
+    }
+
+    /**
+     * Set the exploration algorithm for the current world
+     * @param exploration_algo Algorithm to use
+     */
+    public void setExplorationAlgorithm(Class exploration_algo) {
+        world.setExplorationAlgorithm(exploration_algo);
     }
 
     @Override
@@ -175,32 +260,22 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        // update mouse locations for drawing cracks in progress
         mouseLocation.x = e.getX();
         mouseLocation.y = e.getY();
+        // only send updates when in drawing mode
         if (worldState == WorldState.SINGLE_SEGMENT_MODE) {
-            mouseLocation.x = e.getX();
-            mouseLocation.y = e.getY();
             update(getGraphics());
         }
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
+    public void keyTyped(KeyEvent e) { }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
+    public void keyPressed(KeyEvent e) { }
 
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void keyReleased(KeyEvent e) { }
 
-        // if we are drawing and shift is released, finish drawing
-        if (worldState != WorldState.NOT_DRAWING && e.getKeyCode() == KeyEvent.VK_SHIFT) {
-            finishDrawing();
-        }
-
-    }
 }

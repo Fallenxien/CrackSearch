@@ -21,7 +21,7 @@ import util.Point;
  */
 public class Vertex {
 
-    private Point position;
+    private final Point position;
     private HashMap<Vertex, Edge> connections;
     private List<Edge> relations;
 

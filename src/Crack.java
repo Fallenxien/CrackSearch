@@ -19,13 +19,13 @@ public class Crack {
     public final static int MAX_POINTS = 500;
 
     private Point[] points;
-    private int length;
+    private double length;
 
     public Crack() {
 
     }
 
-    public Crack(Point[] points, int length) {
+    public Crack(Point[] points, double length) {
         this.points = points;
         this.length = length;
     }
@@ -42,7 +42,7 @@ public class Crack {
         return points[points.length-1];
     }
 
-    public int getLength() {
+    public double getLength() {
         return length;
     }
 

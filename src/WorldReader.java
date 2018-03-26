@@ -29,8 +29,8 @@ public class WorldReader {
 
     private static final byte SOH = 0x1;
 
-    private File f;
-    private World w;
+    private final File f;
+    private final World w;
 
     public WorldReader(File f) throws InvalidWorldFileException, java.io.FileNotFoundException {
         this.f = f;
@@ -79,17 +79,18 @@ public class WorldReader {
 
     private List<Crack> readCracks(int num_cracks, DataInputStream reader) throws IOException {
 
+        List<Crack> list = new LinkedList<>();   // list of cracks
+
         // sanity check
         if (num_cracks > 0) {
 
-            List<Crack> list = new LinkedList<>();   // list of cracks
             int num_points;                                    // number of points in crack
             Point[] p;                                         // array for storing points
-            int crack_length;                                  // length of crack
+            double crack_length;                                  // length of crack
 
             for (int i = 0; i < num_cracks; i++) {
                 num_points = reader.readInt();
-                crack_length = reader.readInt();
+                crack_length = reader.readDouble();
 
                 p = new Point[num_points];
 
@@ -102,9 +103,7 @@ public class WorldReader {
                 // create crack & add it to the list
                 list.add(new Crack(p, crack_length));
             }
-            return list;
-        } else {
-            return null;
         }
+        return list;
     }
 }

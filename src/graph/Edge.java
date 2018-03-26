@@ -14,9 +14,9 @@ package graph;
  */
 public class Edge implements Comparable<Edge> {
 
-    private Vertex start;
-    private Vertex end;
-    private double weight;
+    private final Vertex start;
+    private final Vertex end;
+    private final double weight;
 
     public Edge(Vertex start, Vertex end, double weight) {
         this.start = start;

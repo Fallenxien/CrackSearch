@@ -29,7 +29,6 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
 
     public GreedyAlgorithm(List<Crack> cracks) {
         super(cracks);
-
     }
 
     @Override
@@ -37,21 +36,20 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
 
         if (cracks.size() > 0) {
 
-            LinkedList<Crack> cracks_copy = new LinkedList<Crack>(cracks);
+            LinkedList<Crack> cracks_copy = new LinkedList<>(cracks);
 
             // run algorithm
-
-
-
+            return runGreedyAlgorithm(cracks_copy);
         }
 
+        // no cracks, just return an empty route
         return new Route(0);
     }
 
     private Route runGreedyAlgorithm(List<Crack> cracks) {
 
         Route r = new Route(cracks.size() * 2 + 1);
-        Point current_loc =  navigateToCosestCrackToOrigin(cracks, r);
+        Point current_loc =  navigateToClosestCrackToOrigin(cracks, r);
 
         while (cracks.size() > 0) {
             current_loc = navigateToCosestCrack(cracks, current_loc, r);
@@ -59,7 +57,7 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
 
         // navigate back to origin
         r.addSegment(current_loc, new Point(0,0), calcDistanceFromOrigin(current_loc), RouteLocation.RouteType.TO_BASE);
-        return null;
+        return r;
     }
 
     /**
@@ -71,7 +69,7 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
      * @param r route
      * @return Point holding current location
      */
-    public Point navigateToCosestCrackToOrigin(List<Crack> cracks, Route r) {
+    private Point navigateToClosestCrackToOrigin(List<Crack> cracks, Route r) {
 
         ListIterator<Crack> i = cracks.listIterator();
         Crack c, min_c;
@@ -84,9 +82,11 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
         c_end_distance = calcDistanceFromOrigin(min_c.getEnd());
         // check if start/end is closer
         if (c_start_distance < c_end_distance) {
+            // end is closer
             start_of_crack = false;
             min_c_distance = c_end_distance;
         } else {
+            // start is closer
             start_of_crack = true;
             min_c_distance = c_start_distance;
         }
@@ -112,13 +112,15 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
         cracks.remove(min_c);
 
         // add route and return with current location
+        // (current location is the opposite side of the crack closest to the origin
+        //  as we move along the crack after getting to it)
         if (start_of_crack) {
             r.addSegment(new Point(0, 0), min_c.getStart(), min_c_distance, RouteLocation.RouteType.FROM_BASE);
-            r.addSegment(min_c.getStart(), min_c.getEnd(), (double) min_c.getLength(), RouteLocation.RouteType.CRACK);
+            r.addSegment(min_c.getStart(), min_c.getEnd(), min_c.getLength(), RouteLocation.RouteType.CRACK);
             return min_c.getEnd();
         } else {
             r.addSegment(new Point(0, 0), min_c.getEnd(), min_c_distance, RouteLocation.RouteType.FROM_BASE);
-            r.addSegment(min_c.getEnd(), min_c.getStart(), (double) min_c.getLength(), RouteLocation.RouteType.CRACK);
+            r.addSegment(min_c.getEnd(), min_c.getStart(), min_c.getLength(), RouteLocation.RouteType.CRACK);
             return min_c.getStart();
         }
     }
@@ -132,7 +134,7 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
      * @param p Current location
      * @param r route
      */
-    public Point navigateToCosestCrack(List<Crack> cracks, Point p, Route r) {
+    private Point navigateToCosestCrack(List<Crack> cracks, Point p, Route r) {
 
         ListIterator<Crack> i = cracks.listIterator();
         Crack c, min_c;
@@ -175,11 +177,11 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
         // add route and return with current location
         if (start_of_crack) {
             r.addSegment(new Point(0, 0), min_c.getStart(), min_c_distance, RouteLocation.RouteType.BETWEEN_CRACK);
-            r.addSegment(min_c.getStart(), min_c.getEnd(), (double) min_c.getLength(), RouteLocation.RouteType.CRACK);
+            r.addSegment(min_c.getStart(), min_c.getEnd(), min_c.getLength(), RouteLocation.RouteType.CRACK);
             return min_c.getEnd();
         } else {
             r.addSegment(new Point(0, 0), min_c.getEnd(), min_c_distance, RouteLocation.RouteType.BETWEEN_CRACK);
-            r.addSegment(min_c.getEnd(), min_c.getStart(), (double) min_c.getLength(), RouteLocation.RouteType.CRACK);
+            r.addSegment(min_c.getEnd(), min_c.getStart(), min_c.getLength(), RouteLocation.RouteType.CRACK);
             return min_c.getStart();
         }
 
@@ -200,6 +202,15 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
 
     private Double calcDistanceFromOrigin(Point p) {
         return Math.sqrt(Math.pow(p.x,2) + Math.pow(p.y,2));
+    }
+
+    /**
+     * Returns with algorithm name.
+     * @return "Greedy"
+     */
+    @SuppressWarnings("SameReturnValue")
+    public static String getAlgorithmName() {
+        return "Greedy";
     }
 
 }
