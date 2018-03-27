@@ -17,7 +17,6 @@ import java.util.List;
 public abstract class ExplorationAlgorithm {
 
     protected List<Crack> cracks;
-    private Route route;
 
     protected ExplorationAlgorithm(List<Crack> cracks) {
         setCrackList(cracks);
@@ -25,8 +24,6 @@ public abstract class ExplorationAlgorithm {
 
     private void setCrackList(List<Crack> cracks) {
         this.cracks = cracks;
-
-        route = calculateRoute();
     }
 
     /**
@@ -34,7 +31,7 @@ public abstract class ExplorationAlgorithm {
      * @return Route between cracks
      */
     public Route getRoute() {
-        return route;
+        return calculateRoute();
     }
 
     /**

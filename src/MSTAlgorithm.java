@@ -5,8 +5,10 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Stack;
 
 import util.*;
 import graph.*;
@@ -81,24 +83,113 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
     private Graph runKruskals(Graph g) {
 
         Graph t = new Graph();
-        ListIterator<Edge> i = g.getSortedEdgeIterator();
-        Edge e;
 
-        while (i.hasNext()) {
+
+        if (g.getNumVertices() < 2) {
+            // only 1 vertex in g, so only 1 vertex (0 edges) in t
+            t.addVertex(g.getVertexIterator().next());
+            return t;
+        } else {
+            // at least 2 verts (therefore, 1 edge)
+            ListIterator<Edge> i = g.getSortedEdgeIterator();
+            Edge e;
+            Vertex v1,v2;
+
+            // add first edge to tree
             e = i.next();
-            // check both verts are not already in graph
-            if (!(t.contains(e.getStart()) && t.contains(e.getEnd()))) {
-                // check which is missing and add it
-                if (t.contains(e.getStart())) {
-                    t.addVertex(e.getEnd());
+            // clone objects before adding
+            v1 = new Vertex(e.getStart().getPoint());
+            v2 = new Vertex(e.getEnd().getPoint());
+            t.addVertex(v1);
+            t.addVertex(v2);
+            t.addEdge(new Edge(v1,v2,e.getWeight()));
+
+            // add rest of edges if no cycle
+            while (i.hasNext()) {
+                e = i.next();
+
+                // first check if both points are present in the graph,
+                // if at least 1 is missing then there can not be a cycle
+                if (!(t.contains(e.getStart().getPoint()) && t.contains((e.getEnd().getPoint())))) {
+                    // at least 1 vertex is missing, find and add it to the graph and add edge
+                    if (t.contains(e.getStart().getPoint())) {
+                        // only end is missing
+                        v1 = t.getVertex(e.getStart().getPoint());
+                        v2 = new Vertex(e.getEnd().getPoint());
+                        t.addVertex(v2);
+                    } else {
+                        // start is missing
+                        v1 = new Vertex(e.getStart().getPoint());
+                        t.addVertex(v1);
+                        // next check if end is missing
+                        if (!t.contains(e.getEnd().getPoint())) {
+                            v2 = new Vertex(e.getEnd().getPoint());         // end is missing
+                            t.addVertex(v2);
+                        } else {
+                            v2 = t.getVertex(e.getEnd().getPoint());        // end is present
+                        }
+                    }
+                    t.addEdge(new Edge(v1,v2,e.getWeight()));
                 } else {
-                    t.addVertex(e.getStart());
+                    if (!checkForCycles(t, e)) {
+                        // no cycles, get the correct vertices for the cloned graph and add this edge to graph
+                        v1 = t.getVertex(e.getStart().getPoint());
+                        v2 = t.getVertex(e.getEnd().getPoint());
+                        t.addEdge(new Edge(v1, v2, e.getWeight()));
+                    }
                 }
-                t.addEdge(e);
             }
         }
 
         return t;
+    }
+
+    /**
+     * Checks if a graph will have cycles when the edge e is added.
+     * @param g Graph to check
+     * @param e Edge to check
+     * @return true if cycles exist, otherwise false
+     */
+    private boolean checkForCycles(Graph g, Edge e) {
+
+        Stack<Vertex> visted_verts = new Stack<>();
+        // mark end node of new edge as visited
+        // perform DFS on start node to look for end node
+        visted_verts.push(g.getVertex(e.getEnd().getPoint()));
+
+        return checkForCyclesUtil(g.getVertex(e.getStart().getPoint()),visted_verts, null);
+    }
+
+    /**
+     * Checks for cycles in a graph by recursively performing a DFS on the given vertex.
+     * @param v Vertex to search from
+     * @param visited stack containing visited nodes
+     * @param parent Parent node, used to make sure we arent trying to walk back to parent
+     * @return true if graph contains cycles
+     */
+    private boolean checkForCyclesUtil(Vertex v, Stack<Vertex> visited, Vertex parent) {
+
+        // mark current node as visited
+        if (!visited.contains(v)) {
+            visited.push(v);
+        } else {
+            // node is visited already, cycle exists
+            return true;
+        }
+
+        // check if child nodes are visited
+        ListIterator<Edge> i = v.getEdges();
+        Edge e;
+        Vertex child;
+        while (i.hasNext()) {
+            e = i.next();
+            child = Edge.getAssociatedVertex(e,v);
+            if (child != parent && checkForCyclesUtil(child,visited, v)) {
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -117,7 +208,7 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
         // add journey from base to tree
         r.addSegment(new Point(0,0), v.getPoint(), distance_from_origin, RouteLocation.RouteType.FROM_BASE);
         // loop through tree adding nodes to route
-        runDFS(v, r);
+        runDFS(v, r, null);
         // add journey back to base
         r.addSegment(v.getPoint(), new Point(0,0), distance_from_origin, RouteLocation.RouteType.TO_BASE);
 
@@ -130,7 +221,7 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
      * @param v The current vertex the robot is at
      * @param r The route to write too
      */
-    private void runDFS(Vertex v, Route r) {
+    private void runDFS(Vertex v, Route r, Vertex parent) {
 
         // 2x length of crack at v
         addCrackAtVertexToRoute(v,r);
@@ -141,11 +232,12 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
         while (i.hasNext()) {
             e = i.next();
             child = Edge.getAssociatedVertex(e,v);
-            r.addSegment(v.getPoint(), child.getPoint(), e.getWeight(), RouteLocation.RouteType.BETWEEN_CRACK); // add journey to next crack
-            runDFS(child,r);
-            r.addSegment(child.getPoint(), v.getPoint(), e.getWeight(), RouteLocation.RouteType.BETWEEN_CRACK); // add journey back
+            if (child != parent) {
+                r.addSegment(v.getPoint(), child.getPoint(), e.getWeight(), RouteLocation.RouteType.BETWEEN_CRACK); // add journey to next crack
+                runDFS(child, r, v);
+                r.addSegment(child.getPoint(), v.getPoint(), e.getWeight(), RouteLocation.RouteType.BETWEEN_CRACK); // add journey back
+            }
         }
-
     }
 
     /**
@@ -158,8 +250,8 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
 
         // get crack details
         Crack c = findCrackByVertex(v);
-        Point start = c.getPoint(0);
-        Point end = c.getPoint(c.numPoints()-1);
+        Point start = c.getStart();
+        Point end = c.getEnd();
 
         // add twice, once for each direction
         r.addSegment(start, end, c.getLength(), RouteLocation.RouteType.CRACK);

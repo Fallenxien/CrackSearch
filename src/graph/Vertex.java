@@ -9,6 +9,7 @@
 package graph;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -27,6 +28,7 @@ public class Vertex {
 
     public Vertex(Point pos) {
         position = pos;
+        relations = new LinkedList<>();
     }
 
     public int getX() {

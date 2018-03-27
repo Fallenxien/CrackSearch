@@ -55,6 +55,7 @@ public class Graph {
     }
 
     public void addEdge(Edge e) {
+
         e.getStart().addEdge(e);
         e.getEnd().addEdge(e);
         edges.add(e);
@@ -87,8 +88,41 @@ public class Graph {
         return edges.size();
     }
 
+    /**
+     * Gets the vertex in the graph that matches the given point
+     * @param p Point to search for
+     * @return Vertex matching p. If no vertex matches returns null
+     */
+    public Vertex getVertex(Point p) {
+        for (Vertex v: verts) {
+            if (v.getPoint().equals(p)) {
+                return v;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Checks to see if a given vertex is in the graph
+     * @param v Vertex to check
+     * @return true if vertex is in graph, else false
+     */
     public boolean contains(Vertex v) {
         return verts.contains(v);
+    }
+
+    /**
+     * Checks to see if a given point is represented by any vertex in the graph
+     * @param p Point to check
+     * @return true if point is in graph, else false
+     */
+    public boolean contains(Point p) {
+        for (Vertex v: verts) {
+            if (v.getPoint().equals(p)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -170,6 +204,5 @@ public class Graph {
         return Math.sqrt(Math.pow(v.getX(),2) + Math.pow(v.getY(),2));
 
     }
-
 
 }

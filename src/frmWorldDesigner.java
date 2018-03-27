@@ -136,6 +136,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
         frame.addWindowListener(this);
+        frame.setResizable(false);
 
         // register for sim finished events
         pnlDesigner.addSimulationFinishedListener(this);
@@ -320,7 +321,6 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
         menuFile.add(menuItemOpen);
 
         // save menu item
-        // TODO: make save menu button disabled on startup, only enabled when worldFile != null
         menuItemSave = new JMenuItem("Save");
         menuItemSave.setActionCommand(SAVE_COMMAND);
         menuItemSave.addActionListener(this);

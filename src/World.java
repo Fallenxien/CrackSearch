@@ -10,6 +10,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
 
+import util.Point;
+
 /**
  * World Object
  *
@@ -28,7 +30,6 @@ public class World {
     private int height;
     private List<Robot> robotList;
     private List<Crack> crackList;
-    private Graphics2D  graphics;
     private ExplorationAlgorithm explorationAlgorithm;
 
     public int getWidth() {
@@ -76,7 +77,6 @@ public class World {
      * @return Route taken
      */
     public Route getRoute() {
-        explorationAlgorithm.calculateRoute();
         return explorationAlgorithm.getRoute();
     }
 
@@ -126,8 +126,28 @@ public class World {
                 }
                 // draw
                 g.draw(path);
+                drawCrackWeight(g, c);
             }
         }
+    }
+
+    /**
+     * Draws the weight of a crack next to the crack.
+     * @param g Graphics object to draw too
+     * @param c Crack object to get weight/location info
+     */
+    private void drawCrackWeight(Graphics2D g, Crack c) {
+
+        // find center point of crack
+        Point center = new Point();
+        center.x = (c.getStart().x + c.getEnd().x) / 2;
+        center.y = (c.getStart().y + c.getEnd().y) / 2;
+
+        String weight = String.format("%.2f",c.getLength());//String.valueOf(c.getLength());
+
+        // draw weight at offset
+        g.drawString(weight,center.x - 5,center.y - 5);
+
     }
 
     /**

@@ -6,6 +6,8 @@
 // University of Liverpool
 
 import javax.swing.*;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 /**
  * Report form. Generated upon simulation completed.
@@ -24,25 +26,27 @@ public class frmReport {
     public frmReport() {
         frame = new JFrame("Crack Search");
         frame.setContentPane(this.panel1);
-        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.pack();
     }
 
     public void showReport(Route r) {
 
         this.r = r;
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.CEILING);
 
         String s = "Total Trajectory Length: " +
-                r.getTotalLength() +
+                df.format(r.getTotalLength()) +
                 "\nTotal Crack Distance Walked: " +
-                r.getTotalCrackLength() +
+                df.format(r.getTotalCrackLength()) +
                 "\nTotal Intermediate Distance Walked: " +
-                r.getTotalIntermediateLength() +
+                df.format(r.getTotalIntermediateLength()) +
                 "\n\nIntermediate Breakdown:" +
                 "\nBetween Cracks: " +
-                r.getTotalBetweenCrackLength() +
+                df.format(r.getTotalBetweenCrackLength()) +
                 "\nTo/From Base: " +
-                r.getTotalBetweenBaseLength();
+                df.format(r.getTotalBetweenBaseLength());
 
         txtReport.setText(s);
 
