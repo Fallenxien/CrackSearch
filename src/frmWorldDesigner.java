@@ -535,6 +535,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
                 return false;
             }
         }
+
         // correct extension
         return true;
     }

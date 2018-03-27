@@ -6,6 +6,9 @@
 // University of Liverpool
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
@@ -17,6 +20,7 @@ import java.text.DecimalFormat;
 public class frmReport {
     private JTextArea txtReport;
     private JPanel panel1;
+    private JButton btnSaveCSV;
 
     private final JFrame frame;
 
@@ -28,6 +32,8 @@ public class frmReport {
         frame.setContentPane(this.panel1);
         frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         frame.pack();
+
+        btnSaveCSV.addActionListener(e -> saveToCSV());
     }
 
     /**
@@ -73,8 +79,16 @@ public class frmReport {
 
 
 
-    public void saveToCSV() {
-        // TODO: save to csv function
+    private void saveToCSV() {
+
+        JFileChooser fc = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV (*.csv)", "csv");
+        fc.setFileFilter(filter);
+        if (fc.showSaveDialog(panel1) == JFileChooser.APPROVE_OPTION) {
+            ReportCSVWriter writer = new ReportCSVWriter(r,fc.getSelectedFile());
+            writer.writeToCSV();
+        }
+
     }
 
 }
