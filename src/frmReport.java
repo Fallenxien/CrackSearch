@@ -26,10 +26,14 @@ public class frmReport {
     public frmReport() {
         frame = new JFrame("Crack Search");
         frame.setContentPane(this.panel1);
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         frame.pack();
     }
 
+    /**
+     * Shows the report form using the supplied route
+     * @param r Route to report
+     */
     public void showReport(Route r) {
 
         this.r = r;
@@ -52,6 +56,22 @@ public class frmReport {
 
         frame.setVisible(true);
     }
+
+    /**
+     * Shows the report form with the last supplied route
+     */
+    public void showReport() {
+        frame.setVisible(true);
+    }
+
+    /**
+     * Tells the report form to close down & dispose properly
+     */
+    public void close() {
+        frame.dispose();
+    }
+
+
 
     public void saveToCSV() {
         // TODO: save to csv function

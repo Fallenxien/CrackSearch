@@ -27,6 +27,8 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     private final static String ENTER_DRAW_MODE_COMMAND = "draw_mode";
     private final static String SELECTED_ALGORITHM_CHANGED_COMMAND = "algo_changed";
     private final static String RUN_COMMAND = "run_changed";
+    private final static String CLEAR_ROUTE_COMMAND = "clear_route";
+    private final static String SHOW_REPORT_COMMAND = "show_report";
 
     // File Location / Extension Constants
     private final static String APP_DATA_FOLDER = "/CrackSearch/";
@@ -39,11 +41,14 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     private final static String SELECTED_ALGORITHM_PROPERTY = "selectedExplorationAlgorithm";
 
     private final JFrame frame;
+    private final frmReport report;
     private JPanel pnlContainer;
     private PanelWorldDesigner pnlDesigner;
     private JButton btnDrawCrack;
     private JComboBox cboAlgorithm;
     private JButton btnRun;
+    private JButton btnClearRoute;
+    private JButton btnShowReport;
     private JMenuItem menuItemSave;
     private Properties settings;
 
@@ -94,6 +99,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
      */
     private void setWorldName(String file_name) {
         settings.setProperty(LAST_WORLD_PROPERTY, file_name);
+        frame.setTitle("Crack Search - " + file_name);
     }
 
     /**
@@ -102,6 +108,10 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
      */
     private void setWorldFile(File f) {
         if (f != null) {
+            // check extension is correct
+            if (!checkFileExtension(f)) {
+                f = new File(f.getPath() + WORLD_FILE_EXTENSION);
+            }
             menuItemSave.setEnabled(true);
             setLastWorldDirectory(f.getParent() + "\\");
             setWorldName(f.getName());
@@ -137,6 +147,9 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
         frame.pack();
         frame.addWindowListener(this);
         frame.setResizable(false);
+
+        // report frame
+        report = new frmReport();
 
         // register for sim finished events
         pnlDesigner.addSimulationFinishedListener(this);
@@ -280,6 +293,14 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
         btnRun.setActionCommand(RUN_COMMAND);
         btnRun.addActionListener(this);
 
+        // clear route button
+        btnClearRoute.setActionCommand(CLEAR_ROUTE_COMMAND);
+        btnClearRoute.addActionListener(this);
+
+        // show report button
+        btnShowReport.setActionCommand(SHOW_REPORT_COMMAND);
+        btnShowReport.addActionListener(this);
+
     }
 
     /**
@@ -350,10 +371,14 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
                 break;
             case OPEN_COMMAND:
                 File f = getWorldFileToOpen();
-                loadWorld(f);
+                if (f != null) {
+                    loadWorld(f);
+                }
                 break;
             case SAVE_AS_COMMAND:
-                worldFile = getWorldFileToSave();
+                if (!getWorldFileToSave()) {
+                    break;
+                }
             case SAVE_COMMAND:
                 saveWorld(getWorldFile());
                 break;
@@ -365,8 +390,24 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
                 break;
             case RUN_COMMAND:
                 runSimulation();
+                break;
+            case CLEAR_ROUTE_COMMAND:
+                clearRoute();
+                break;
+            case SHOW_REPORT_COMMAND:
+                showReport();
         }
 
+    }
+
+    /**
+     * Clear the current route from the designer. Also disable buttons
+     * relying on a route.
+     */
+    private void clearRoute() {
+        pnlDesigner.clearRoute();
+        btnClearRoute.setEnabled(false);
+        btnShowReport.setEnabled(false);
     }
 
     /**
@@ -418,26 +459,29 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
         fc.setCurrentDirectory(new File(getLastWorldDirectory()));
         FileNameExtensionFilter filter = new FileNameExtensionFilter("World files (*" + WORLD_FILE_EXTENSION + ")", "world");
         fc.setFileFilter(filter);
-        fc.showSaveDialog(pnlContainer);
-        fc.setDialogTitle("Load");
-        return fc.getSelectedFile();
+        if (fc.showOpenDialog(pnlContainer) == JFileChooser.APPROVE_OPTION) {
+            return fc.getSelectedFile();
+        }
+        return null;
     }
 
     /**
      * Create a file chooser dialog for user to select the file location and name they wish to save too
-     * @return The world file to save too
+     * @return True if successfully updated worldFile, else false
      */
-    private File getWorldFileToSave() {
+    private boolean getWorldFileToSave() {
 
         JFileChooser fc = new JFileChooser();
+        fc.setCurrentDirectory(new File(getLastWorldDirectory()));
         FileNameExtensionFilter filter = new FileNameExtensionFilter("World files (*" + WORLD_FILE_EXTENSION + ")", "world");
         fc.setFileFilter(filter);
-        fc.showSaveDialog(pnlContainer);
-        fc.setDialogTitle("Save");
+        if (fc.showSaveDialog(pnlContainer) == JFileChooser.APPROVE_OPTION) {
+            setWorldFile(fc.getSelectedFile());
+            return true;
+        }
 
-        setWorldFile(fc.getSelectedFile());
-        return fc.getSelectedFile();
-
+        // no file selected
+        return false;
     }
 
     /**
@@ -450,9 +494,12 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
             setWorldFile(f);
             WorldReader reader = new WorldReader(f);
             pnlDesigner.setWorld(reader.getWorld());
-        } catch (InvalidWorldFileException | FileNotFoundException ex1) {
+        } catch (InvalidWorldFileException ex1) {
             ex1.printStackTrace();
-            // TODO: prompt user with error
+            JOptionPane.showMessageDialog(frame,"File format is not supported.");
+        } catch (FileNotFoundException ex2){
+            ex2.printStackTrace();
+            JOptionPane.showMessageDialog(frame,"File not found.");
         }
     }
 
@@ -462,14 +509,11 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
      */
     private void saveWorld(File f) {
         try {
-            if (!checkFileExtension(f)) {
-                f.renameTo(new File(f.getPath() + WORLD_FILE_EXTENSION));
-            }
             WorldWriter writer = new WorldWriter(f, pnlDesigner.world);
             writer.save();
         } catch (IOException e) {
             e.printStackTrace();
-            // TODO: insert error dialog to user
+            JOptionPane.showMessageDialog(frame,"Error saving world file.");
         }
     }
 
@@ -486,7 +530,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
             // no extension present
             return false;
         } else {
-            if (path.substring(extension_pos).equals(WORLD_FILE_EXTENSION)) {
+            if (!path.substring(extension_pos).equals(WORLD_FILE_EXTENSION)) {
                 // wrong extension
                 return false;
             }
@@ -496,14 +540,32 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     }
 
     /**
+     * Shows the report form and tells it to update the report to the
+     * supplied route
+     * @param r Route to report
+     */
+    private void showReport(Route r) {
+        report.showReport(r);
+    }
+
+    /**
+     * Shows the report form.
+     */
+    private void showReport() {
+        report.showReport();
+    }
+
+    /**
      * Call back function for simulation finished. Creates the report dialog.
      * @param r Route taken
      */
     @Override
     public void simulationFinished(Route r) {
 
-        frmReport report = new frmReport();
-        report.showReport(r);
+
+        showReport(r);
+        btnClearRoute.setEnabled(true);
+        btnShowReport.setEnabled(true);
 
     }
 
@@ -514,6 +576,8 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     public void windowClosing(WindowEvent e) {
         File settings_file = new File(System.getenv("APPDATA") + APP_DATA_FOLDER + PROPERTIES_FILE_NAME);
         writeSettingsFile(settings_file);
+
+        report.close();
     }
 
     @Override

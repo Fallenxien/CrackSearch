@@ -21,22 +21,31 @@ import util.Point;
  */
 public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
 
-    private enum WorldState {
-        NOT_DRAWING, WAITING_FOR_INPUT, SINGLE_SEGMENT_MODE, MULTI_SEGMENT_MODE
-    }
+
+    private static final int NOT_DRAWING = 0;
+    private static final int WAITING_FOR_INPUT = 1;
+    private static final int SINGLE_SEGMENT_MODE = 2;
+    private static final int MULTI_SEGMENT_MODE = 3;
+    private static final int SHOW_LAST_ROUTE_MODE = 4;
+    private static final int NUM_STATE_BITS = SHOW_LAST_ROUTE_MODE;
+
+    private static final int FIRST_CRACK_DRAWING_MODE = NOT_DRAWING;
+    private static final int LAST_CRACK_DRAWING_MODE = MULTI_SEGMENT_MODE;
 
     World world;
-    private WorldState worldState;
+    private BitSet worldState;
     private Point[] drawingPoints;
     private int currentDrawingPoint;
     private GeneralPath path;
     private final util.Point mouseLocation;
     private final List<SimulationFinishedListener> simFinishedListeners;
+    private Route lastRoute;
 
     public PanelWorldDesigner() {
         super();
         world = new World();
-        worldState = WorldState.NOT_DRAWING;
+        worldState = new BitSet(NUM_STATE_BITS);
+        worldState.set(NOT_DRAWING);
         mouseLocation = new util.Point();
         setDoubleBuffered(true);    // TODO: try improve double buffering with BufferStrategy
         simFinishedListeners = new LinkedList<>();
@@ -70,8 +79,11 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
 
         Graphics2D g2d = (Graphics2D) g;
         world.drawWorld(g2d);
-        if (worldState == WorldState.SINGLE_SEGMENT_MODE) {
+        if (worldState.get(SINGLE_SEGMENT_MODE)) {
             paintDrawingCrack(g2d);
+        }
+        if (worldState.get(SHOW_LAST_ROUTE_MODE)) {
+            paintLastRoute(g2d);
         }
     }
 
@@ -80,9 +92,35 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
      * @param g Graphics object to paint too
      */
     private void paintDrawingCrack(Graphics2D g) {
-
         util.Point last_confirmed_point =  drawingPoints[currentDrawingPoint - 1];
         g.drawLine(last_confirmed_point.x, last_confirmed_point.y, mouseLocation.x, mouseLocation.y);
+    }
+
+    /**
+     * Draws the route stored in lastRoute variable
+     * @param g Graphics object to draw too
+     */
+    private void paintLastRoute(Graphics2D g) {
+
+        // sanity check
+        if (lastRoute.getSize() > 2) {
+            ListIterator<RouteLocation> i = lastRoute.getLocations();
+            RouteLocation location;
+            // add all other points to route
+            while (i.hasNext()) {
+                location = i.next();
+                // create next step in path
+                if (location.getType() == RouteLocation.RouteType.CRACK) {
+                    g.setColor(Color.BLACK);
+                } else {
+                    g.setColor(Color.BLUE);
+                }
+                g.drawLine(location.getStart().x, location.getStart().y, location.getEnd().x, location.getEnd().y);
+
+            }
+        }
+        // make sure colour is back on black
+        g.setColor(Color.BLACK);
     }
 
     /**
@@ -90,14 +128,14 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
      * it should draw in.
      */
     public void enterDrawingMode() {
-        worldState = WorldState.WAITING_FOR_INPUT;
+        worldState.set(FIRST_CRACK_DRAWING_MODE, LAST_CRACK_DRAWING_MODE, false);
+        worldState.set(WAITING_FOR_INPUT);
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
 
-        switch (worldState) {
-            case WAITING_FOR_INPUT:
+        if (worldState.get(WAITING_FOR_INPUT)) {
                 if (e.isShiftDown()) {
                     // TODO: multi segment mode
                     //startDrawing(e);
@@ -105,21 +143,18 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
                 } else {
                     startSingleSegmentDrawing(e);
                 }
-                break;
-            case MULTI_SEGMENT_MODE:
+        } else if (worldState.get(MULTI_SEGMENT_MODE)) {
                 if (e.isShiftDown()) {
                     addPoint(e);
-                    break;
                 }
-            case SINGLE_SEGMENT_MODE:
+        } else if (worldState.get(SINGLE_SEGMENT_MODE)) {
                 addPoint(e);
                 finishDrawing();
-                break;
         }
 
     }
 
-    /**
+    /*
      * Starts multi segment drawing mode. Marks the current mouse location as the start of the
      * crack and awaits another click to determine the next location, until the enter key is
      * pressed. While the designer is in MULTI_SEGMENT_MODE it will draw a line between the last
@@ -129,14 +164,15 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
      * TODO: implement multi segment feature
      * @param e MouseEvent containing mouse position
      */
-    private void startDrawingMultiSegment(MouseEvent e) {
-        worldState = WorldState.MULTI_SEGMENT_MODE;
+    /*private void startDrawingMultiSegment(MouseEvent e) {
+        worldState.set(FIRST_CRACK_DRAWING_MODE, LAST_CRACK_DRAWING_MODE, false);
+        worldState.set(MULTI_SEGMENT_MODE);
         drawingPoints = new util.Point[Crack.MAX_POINTS];
         currentDrawingPoint = 0;
         path = new GeneralPath();
         path.moveTo(e.getX(),e.getY());
         addPoint(e);
-    }
+    }*/
 
     /**
      * Starts single segment drawing mode. Marks the current mouse location as the start of the
@@ -145,7 +181,8 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
      * @param e MouseEvent containing mouse position
      */
     private void startSingleSegmentDrawing(MouseEvent e) {
-        worldState = WorldState.SINGLE_SEGMENT_MODE;
+        worldState.set(FIRST_CRACK_DRAWING_MODE, LAST_CRACK_DRAWING_MODE, false);
+        worldState.set(SINGLE_SEGMENT_MODE);
         drawingPoints = new util.Point[Crack.MAX_POINTS];
         currentDrawingPoint = 0;
         path = new GeneralPath();
@@ -178,7 +215,8 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
             world.addCrack(new Crack(tmp, length));
         }
         update(getGraphics());
-        worldState = WorldState.NOT_DRAWING;
+        worldState.set(FIRST_CRACK_DRAWING_MODE, LAST_CRACK_DRAWING_MODE, false);
+        worldState.set(NOT_DRAWING);
     }
 
     /**
@@ -218,12 +256,23 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
 
         // currently no animation, so simulation can finish immediately.
         // call the sim finished event to notify all listeners
-        Route r = world.getRoute();
+        lastRoute = world.getRoute();
+        // draw the route on screen
+        worldState.set(SHOW_LAST_ROUTE_MODE);
+        update(getGraphics());
 
         for (SimulationFinishedListener listener : simFinishedListeners) {
-            listener.simulationFinished(r);
+            listener.simulationFinished(lastRoute);
         }
 
+    }
+
+    /**
+     * Stops drawing the last route
+     */
+    public void clearRoute() {
+        worldState.set(SHOW_LAST_ROUTE_MODE, false);
+        update(getGraphics());
     }
 
     /**
@@ -264,7 +313,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         mouseLocation.x = e.getX();
         mouseLocation.y = e.getY();
         // only send updates when in drawing mode
-        if (worldState == WorldState.SINGLE_SEGMENT_MODE) {
+        if (worldState.get(SINGLE_SEGMENT_MODE)) {
             update(getGraphics());
         }
     }

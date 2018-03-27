@@ -25,8 +25,8 @@ public class RouteLocation {
         FROM_BASE, CRACK, BETWEEN_CRACK, TO_BASE
     }
 
-    private Point start_location;
-    private Point end_location;
+    private Point startLocation;
+    private Point endLocation;
     private RouteType type;
     private Double weight;
 
@@ -46,11 +46,18 @@ public class RouteLocation {
         return weight;
     }
 
+    public Point getStart() {
+        return startLocation;
+    }
+
+    public Point getEnd() {
+        return endLocation;
+    }
 
 
     public RouteLocation(Point start, Point end, Double weight, RouteType type) {
-        this.start_location = start;
-        this.end_location = end;
+        this.startLocation = start;
+        this.endLocation = end;
         this.weight = weight;
         this.type = type;
     }

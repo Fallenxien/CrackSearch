@@ -176,11 +176,11 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
 
         // add route and return with current location
         if (start_of_crack) {
-            r.addSegment(new Point(0, 0), min_c.getStart(), min_c_distance, RouteLocation.RouteType.BETWEEN_CRACK);
+            r.addSegment(p, min_c.getStart(), min_c_distance, RouteLocation.RouteType.BETWEEN_CRACK);
             r.addSegment(min_c.getStart(), min_c.getEnd(), min_c.getLength(), RouteLocation.RouteType.CRACK);
             return min_c.getEnd();
         } else {
-            r.addSegment(new Point(0, 0), min_c.getEnd(), min_c_distance, RouteLocation.RouteType.BETWEEN_CRACK);
+            r.addSegment(p, min_c.getEnd(), min_c_distance, RouteLocation.RouteType.BETWEEN_CRACK);
             r.addSegment(min_c.getEnd(), min_c.getStart(), min_c.getLength(), RouteLocation.RouteType.CRACK);
             return min_c.getStart();
         }

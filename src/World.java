@@ -153,9 +153,10 @@ public class World {
     /**
      * Draws the robot in its current state
      * @param g Graphics2d object
+     * TODO: decide if we want to draw robot or not (probably dependant on animation?)
      */
     private void drawRobot(Graphics2D g) {
-        robotList.get(0).drawRobot(g);
+        //robotList.get(0).drawRobot(g);
     }
 
 }
