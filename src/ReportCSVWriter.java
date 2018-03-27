@@ -10,12 +10,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Created by Andy on 27/03/2018.
+ * ReportCSVWriter
+ *
+ * Writes a route report to a CSV file. Matches a similar format to that displayed
+ * in the report form.
  */
 public class ReportCSVWriter {
 
-    Route route;
-    File file;
+    private Route route;
+    private File file;
 
     /**
      * Constructs a report CSV writer with a route and file.
