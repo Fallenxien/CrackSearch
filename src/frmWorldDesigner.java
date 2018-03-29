@@ -24,11 +24,6 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     private final static String OPEN_COMMAND = "open";
     private final static String SAVE_COMMAND = "save";
     private final static String SAVE_AS_COMMAND = "save_as";
-    private final static String ENTER_DRAW_MODE_COMMAND = "draw_mode";
-    private final static String SELECTED_ALGORITHM_CHANGED_COMMAND = "algo_changed";
-    private final static String RUN_COMMAND = "run_changed";
-    private final static String CLEAR_ROUTE_COMMAND = "clear_route";
-    private final static String SHOW_REPORT_COMMAND = "show_report";
 
     // File Location / Extension Constants
     private final static String APP_DATA_FOLDER = "/CrackSearch/";
@@ -280,26 +275,21 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     private void buildToolBox() {
 
         // add crack button
-        btnDrawCrack.setActionCommand(ENTER_DRAW_MODE_COMMAND);
-        btnDrawCrack.addActionListener(this);
+        btnDrawCrack.addActionListener(e -> pnlDesigner.enterDrawingMode());
 
         // algorithm selection combo box
         cboAlgorithm.addItem(GreedyAlgorithm.getAlgorithmName());
         cboAlgorithm.addItem(MSTAlgorithm.getAlgorithmName());
-        cboAlgorithm.setActionCommand(SELECTED_ALGORITHM_CHANGED_COMMAND);
-        cboAlgorithm.addActionListener(this);
+        cboAlgorithm.addActionListener(e -> changeAlgorithm());
 
         // run button
-        btnRun.setActionCommand(RUN_COMMAND);
-        btnRun.addActionListener(this);
+        btnRun.addActionListener(e -> runSimulation());
 
         // clear route button
-        btnClearRoute.setActionCommand(CLEAR_ROUTE_COMMAND);
-        btnClearRoute.addActionListener(this);
+        btnClearRoute.addActionListener(e -> clearRoute());
 
         // show report button
-        btnShowReport.setActionCommand(SHOW_REPORT_COMMAND);
-        btnShowReport.addActionListener(this);
+        btnShowReport.addActionListener(e -> showReport());
 
     }
 
@@ -359,11 +349,10 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     }
 
     /**
-     * Handles all action events for the current form
+     * Handles all world saving and loading events
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-
 
         switch (e.getActionCommand()) {
             case NEW_COMMAND:
@@ -382,20 +371,6 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
             case SAVE_COMMAND:
                 saveWorld(getWorldFile());
                 break;
-            case ENTER_DRAW_MODE_COMMAND:
-                pnlDesigner.enterDrawingMode();
-                break;
-            case SELECTED_ALGORITHM_CHANGED_COMMAND:
-                changeAlgorithm();
-                break;
-            case RUN_COMMAND:
-                runSimulation();
-                break;
-            case CLEAR_ROUTE_COMMAND:
-                clearRoute();
-                break;
-            case SHOW_REPORT_COMMAND:
-                showReport();
         }
 
     }
