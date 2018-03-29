@@ -7,8 +7,6 @@
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
@@ -76,8 +74,6 @@ public class frmReport {
     public void close() {
         frame.dispose();
     }
-
-
 
     private void saveToCSV() {
 
