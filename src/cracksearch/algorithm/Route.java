@@ -23,12 +23,10 @@ public class Route {
 
     private final List<RouteSection> route;
     private int numLocations;
-    private int currentIndex;
 
     public Route(int max_locations) {
 
         route = new ArrayList<>(max_locations);
-        currentIndex = 0;
         numLocations = 0;
 
     }
