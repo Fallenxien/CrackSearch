@@ -61,7 +61,7 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
         Point current_loc =  navigateToClosestCrackToOrigin(cracks, r);
 
         while (cracks.size() > 0) {
-            current_loc = navigateToCosestCrack(cracks, current_loc, r);
+            current_loc = navigateToClosestCrack(cracks, current_loc, r);
         }
 
         // navigate back to origin
@@ -143,7 +143,7 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
      * @param p Current location
      * @param r route
      */
-    private Point navigateToCosestCrack(List<Crack> cracks, Point p, Route r) {
+    private Point navigateToClosestCrack(List<Crack> cracks, Point p, Route r) {
 
         ListIterator<Crack> i = cracks.listIterator();
         Crack c, min_c;
