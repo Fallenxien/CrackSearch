@@ -17,7 +17,7 @@ import java.util.Properties;
  * Holds all code for creating and managing the World Designer form and all associated events.
  */
 @SuppressWarnings("unchecked")
-public class frmWorldDesigner implements ActionListener, SimulationFinishedListener, WindowListener {
+public class frmWorldDesigner implements ActionListener, SimulationFinishedListener, WindowListener, AlgorithmListUpdatedListener {
 
     // Action Listener commands
     private final static String NEW_COMMAND = "new";
@@ -26,7 +26,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     private final static String SAVE_AS_COMMAND = "save_as";
 
     // File Location / Extension Constants
-    private final static String APP_DATA_FOLDER = "/CrackSearch/";
+    public final static String APP_DATA_FOLDER = "/CrackSearch/";
     private final static String PROPERTIES_FILE_NAME = "config.properties";
     private static final String WORLD_FILE_EXTENSION = ".world";
 
@@ -44,10 +44,46 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     private JButton btnRun;
     private JButton btnClearRoute;
     private JButton btnShowReport;
+    private JButton btnEditAlg;
     private JMenuItem menuItemSave;
     private Properties settings;
 
     private File worldFile;
+    private ExplorationAlgorithmListLoader listLoader;
+
+    /**
+     * Initial Constructor, called from main.java
+     */
+    public frmWorldDesigner() {
+
+        // load any program variables
+        loadSettings();
+
+        // create jframe
+        frame = new JFrame("Crack Search");
+        frame.setContentPane(this.pnlContainer);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.addWindowListener(this);
+        frame.setResizable(false);
+
+        // list loader
+        listLoader = ExplorationAlgorithmListLoader.getInstance();
+        listLoader.addAlgorithmListUpdatedListener(this);
+
+        // report frame
+        report = new frmReport();
+
+        // register for sim finished events
+        pnlDesigner.addSimulationFinishedListener(this);
+
+        // build UI
+        buildMenuBar();
+        buildToolBox();
+        loadInitialWorld();
+        getExplorationAlgorithmFromSettings();
+
+    }
 
     /**
      * Gets the directory path of the last world file from settings
@@ -125,36 +161,6 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
      */
     private File getWorldFile() {
         return worldFile;
-    }
-
-    /**
-     * Initial Constructor, called from main.java
-     */
-    public frmWorldDesigner() {
-
-        // load any program variables
-        loadSettings();
-
-        // create jframe
-        frame = new JFrame("Crack Search");
-        frame.setContentPane(this.pnlContainer);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.addWindowListener(this);
-        frame.setResizable(false);
-
-        // report frame
-        report = new frmReport();
-
-        // register for sim finished events
-        pnlDesigner.addSimulationFinishedListener(this);
-
-        // build UI
-        buildMenuBar();
-        buildToolBox();
-        loadInitialWorld();
-        getExplorationAlgorithmFromSettings();
-
     }
 
     /**
@@ -278,8 +284,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
         btnDrawCrack.addActionListener(e -> pnlDesigner.enterDrawingMode());
 
         // algorithm selection combo box
-        cboAlgorithm.addItem(GreedyAlgorithm.getAlgorithmName());
-        cboAlgorithm.addItem(MSTAlgorithm.getAlgorithmName());
+        updateAlgorithmEntries(listLoader.getNames());
         cboAlgorithm.addActionListener(e -> changeAlgorithm());
 
         // run button
@@ -291,6 +296,16 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
         // show report button
         btnShowReport.addActionListener(e -> showReport());
 
+        btnEditAlg.addActionListener(e -> btnEditAlgorithmsPressed());
+
+    }
+
+    /**
+     * Opens the edit algorithm form
+     */
+    private void btnEditAlgorithmsPressed() {
+        frmAlgorithm algorithm = new frmAlgorithm();
+        algorithm.show();
     }
 
     /**
@@ -399,20 +414,36 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
      */
     private void changeAlgorithm() {
 
-        Class c = null;
+        Class c;
 
-        switch (cboAlgorithm.getSelectedIndex()) {
-            case 0:
-                c = GreedyAlgorithm.class;
-                break;
-            case 1:
-                c = MSTAlgorithm.class;
-                break;
+        if (cboAlgorithm.getSelectedIndex() >= 0) {
+            c = listLoader.getClasses()[cboAlgorithm.getSelectedIndex()];
+
+            if (!(c == null)) {
+                pnlDesigner.setExplorationAlgorithm(c);
+                settings.put(SELECTED_ALGORITHM_PROPERTY, String.valueOf(cboAlgorithm.getSelectedIndex()));
+            }
+        }
+    }
+
+    /**
+     * Updates the cboAlgorithm field with an update to date copy of entries
+     */
+    private void updateAlgorithmEntries(String[] names) {
+        // attempt to preserve selected index
+        int selected_index = cboAlgorithm.getSelectedIndex();
+
+        // update list
+        cboAlgorithm.removeAllItems();
+        for (String s: names) {
+            cboAlgorithm.addItem(s);
         }
 
-        if (!(c == null)) {
-            pnlDesigner.setExplorationAlgorithm(c);
-            settings.put(SELECTED_ALGORITHM_PROPERTY, String.valueOf(cboAlgorithm.getSelectedIndex()));
+        // check selected index is still ok
+        if (selected_index >= names.length) {
+            cboAlgorithm.setSelectedIndex(names.length - 1);
+        } else {
+            cboAlgorithm.setSelectedIndex(selected_index);
         }
     }
 
@@ -577,5 +608,15 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     @Override
     public void windowDeactivated(WindowEvent e) {
 
+    }
+
+    /**
+     * Updates the algorithm list combo box.
+     * Called when algorithm list changes.
+     * @param names array of names
+     */
+    @Override
+    public void AlgorithmListUpdatedListener(String[] names) {
+        updateAlgorithmEntries(names);
     }
 }
