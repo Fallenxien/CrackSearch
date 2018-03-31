@@ -8,6 +8,7 @@
 package cracksearch.algorithm;
 
 import cracksearch.util.Point;
+import cracksearch.world.Crack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +34,63 @@ public class Route {
     }
 
     /**
-     * Adds a segment to the route.
-     * @param start Start of the segment
-     * @param end End of the segment
-     * @param weight Weight of the segment
-     * @param type Type of segment
+     * Adds a crack segment to the route.
+     * @param crack associated with segment
+     * @param start Start point on the crack of the segment
+     * @param end End point on the crack of the segment
+     * @return Created route section
      */
-    public void addSegment(Point start, Point end, Double weight, RouteSection.RouteType type) {
-        route.add(new RouteSection(start, end, weight, type));
+    public CrackRouteSection addCrackSegment(Crack crack, Point start, Point end) {
+        CrackRouteSection section = new CrackRouteSection(crack, start, end);
+        route.add(section);
         numLocations++;
+
+        return section;
+    }
+
+    /**
+     * Adds a between crack segment to the route.
+     * @param startCrack start crack
+     * @param endCrack end crack
+     * @param start Start point on the crack of the segment
+     * @param end End point on the crack of the segment
+     * @param weight weight of segment
+     * @return Created route section
+     */
+    public BetweenCrackRouteSection addBetweenCrackSegment(Crack startCrack, Crack endCrack, Point start, Point end, double weight) {
+        BetweenCrackRouteSection section = new BetweenCrackRouteSection(startCrack, endCrack, start, end, weight);
+        route.add(section);
+        numLocations++;
+
+        return section;
+    }
+
+    /**
+     * Adds a from base segment to the route.
+     * @param crack associated with segment
+     * @param crackPos position on crack we end at
+     * @return Created route section
+     */
+    public BetweenBaseRouteSection addFromBaseSegment(Crack crack, Point crackPos, double weight) {
+        BetweenBaseRouteSection section = new BetweenBaseRouteSection(crack, crackPos, weight, false);
+        route.add(section);
+        numLocations++;
+
+        return section;
+    }
+
+    /**
+     * Adds a to base segment to the route.
+     * @param crack associated with segment
+     * @param crackPos position on crack we start from
+     * @return Created route section
+     */
+    public BetweenBaseRouteSection addToBaseSegment(Crack crack, Point crackPos, double weight) {
+        BetweenBaseRouteSection section = new BetweenBaseRouteSection(crack, crackPos, weight, true);
+        route.add(section);
+        numLocations++;
+
+        return section;
     }
 
     /**

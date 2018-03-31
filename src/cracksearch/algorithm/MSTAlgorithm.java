@@ -205,15 +205,15 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
         Route r = new Route(2* (cracks.size() + t.getNumEdges() + 1)); // number of segments in route is 2*(num cracks + num edges + 1)
         // robot starts at origin, so need to find the vertex in G closest to origin
         v = t.findClosestToOrigin();
+        Crack crack = findCrackByVertex(v);
         double distance_from_origin = Graph.calcDistanceFromOrigin(v);
 
         // add journey from base to tree
-        r.addSegment(new Point(0,0), v.getPoint(), distance_from_origin, RouteSection.RouteType.FROM_BASE);
+        r.addFromBaseSegment(crack, v.getPoint(), distance_from_origin);
         // loop through tree adding nodes to route
-        runDFS(v, r, null);
+        runDFS(v, crack, r, null);
         // add journey back to base
-        r.addSegment(v.getPoint(), new Point(0,0), distance_from_origin, RouteSection.RouteType.TO_BASE);
-
+        r.addToBaseSegment(crack, v.getPoint(), distance_from_origin);
         return r;
 
     }
@@ -221,43 +221,40 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
     /**
      * Runs a Depth First Search Algorithm to produce the route the robot will follow
      * @param v The current vertex the robot is at
+     * @param c Crack matching vertex v
      * @param r The route to write too
+     * @param parent Parent vertex of v
      */
-    private void runDFS(Vertex v, Route r, Vertex parent) {
+    private void runDFS(Vertex v, Crack c, Route r, Vertex parent) {
 
-        // 2x length of crack at v
-        addCrackAtVertexToRoute(v,r);
+        addCrackToRoute(c,r);
 
         Vertex child;
         Edge e;
+        Crack child_crack;
         ListIterator<Edge> i = v.getEdges();
         while (i.hasNext()) {
             e = i.next();
             child = Edge.getAssociatedVertex(e,v);
+            child_crack = findCrackByVertex(child);
             if (child != parent) {
-                r.addSegment(v.getPoint(), child.getPoint(), e.getWeight(), RouteSection.RouteType.BETWEEN_CRACK); // add journey to next crack
-                runDFS(child, r, v);
-                r.addSegment(child.getPoint(), v.getPoint(), e.getWeight(), RouteSection.RouteType.BETWEEN_CRACK); // add journey back
+                r.addBetweenCrackSegment(c, child_crack, v.getPoint(), child.getPoint(), e.getWeight());
+                runDFS(child, child_crack, r, v);
+                r.addBetweenCrackSegment(child_crack, c, child.getPoint(), v.getPoint(), e.getWeight());
             }
         }
     }
 
     /**
-     * Finds the crack associated with vertex v, and adds it to route r twice
+     * Adds a crack to the route r twice
      * (once for each direction)
-     * @param v Vertex of crack to add
+     * @param c Crack to add
      * @param r Route to add crack too
      */
-    private void addCrackAtVertexToRoute(Vertex v, Route r) {
-
-        // get crack details
-        Crack c = findCrackByVertex(v);
-        Point start = c.getStart();
-        Point end = c.getEnd();
-
+    private void addCrackToRoute(Crack c, Route r) {
         // add twice, once for each direction
-        r.addSegment(start, end, c.getLength(), RouteSection.RouteType.CRACK);
-        r.addSegment(end, start, c.getLength(), RouteSection.RouteType.CRACK);
+        r.addCrackSegment(c, c.getStart(), c.getEnd());
+        r.addCrackSegment(c, c.getEnd(), c.getStart());
     }
 
     /**

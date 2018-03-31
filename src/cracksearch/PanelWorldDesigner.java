@@ -121,7 +121,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
                 } else {
                     g.setColor(Color.BLUE);
                 }
-                g.drawLine(location.getStart().x, location.getStart().y, location.getEnd().x, location.getEnd().y);
+                g.drawLine(location.getStartLocation().x, location.getStartLocation().y, location.getEndLocation().x, location.getEndLocation().y);
 
             }
         }

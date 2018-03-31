@@ -12,12 +12,9 @@ import cracksearch.util.Point;
 /**
  * RouteSection
  *
- * Contains methods and variables describing a Graph.
- *
- * Also contains static methods for common cracksearch.graph functionality.
+ * Abstract class for describing sections of routes
  */
-@SuppressWarnings("ALL")
-public class RouteSection {
+public abstract class RouteSection {
 
     /**
      * Details the ground that the robot is travelling over, i.e. is it currently looking at a crack
@@ -27,10 +24,10 @@ public class RouteSection {
         FROM_BASE, CRACK, BETWEEN_CRACK, TO_BASE
     }
 
-    private Point startLocation;
-    private Point endLocation;
-    private RouteType type;
-    private Double weight;
+    protected Point startLocation;
+    protected Point endLocation;
+    protected RouteType type;
+    protected double weight;
 
     /**
      * Get the type for the current route section
@@ -44,7 +41,7 @@ public class RouteSection {
      * Returns the weigh associated with the Route Location
      * @return weight as a double
      */
-    public Double getWeight() {
+    public double getWeight() {
         return weight;
     }
 
@@ -52,7 +49,7 @@ public class RouteSection {
      * Gets the start location of this section
      * @return Point containing start location
      */
-    public Point getStart() {
+    public Point getStartLocation() {
         return startLocation;
     }
 
@@ -60,18 +57,8 @@ public class RouteSection {
      * Gets the end location of this section
      * @return Point containing end location
      */
-    public Point getEnd() {
+    public Point getEndLocation() {
         return endLocation;
     }
-
-    public RouteSection(Point start, Point end, Double weight, RouteType type) {
-        this.startLocation = start;
-        this.endLocation = end;
-        this.weight = weight;
-        this.type = type;
-    }
-
-
-
 
 }
