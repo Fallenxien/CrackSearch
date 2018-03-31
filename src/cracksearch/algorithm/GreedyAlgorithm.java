@@ -65,7 +65,7 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
         }
 
         // navigate back to origin
-        r.addSegment(current_loc, new Point(0,0), calcDistanceFromOrigin(current_loc), RouteLocation.RouteType.TO_BASE);
+        r.addSegment(current_loc, new Point(0,0), calcDistanceFromOrigin(current_loc), RouteSection.RouteType.TO_BASE);
         return r;
     }
 
@@ -124,12 +124,12 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
         // (current location is the opposite side of the crack closest to the origin
         //  as we move along the crack after getting to it)
         if (start_of_crack) {
-            r.addSegment(new Point(0, 0), min_c.getStart(), min_c_distance, RouteLocation.RouteType.FROM_BASE);
-            r.addSegment(min_c.getStart(), min_c.getEnd(), min_c.getLength(), RouteLocation.RouteType.CRACK);
+            r.addSegment(new Point(0, 0), min_c.getStart(), min_c_distance, RouteSection.RouteType.FROM_BASE);
+            r.addSegment(min_c.getStart(), min_c.getEnd(), min_c.getLength(), RouteSection.RouteType.CRACK);
             return min_c.getEnd();
         } else {
-            r.addSegment(new Point(0, 0), min_c.getEnd(), min_c_distance, RouteLocation.RouteType.FROM_BASE);
-            r.addSegment(min_c.getEnd(), min_c.getStart(), min_c.getLength(), RouteLocation.RouteType.CRACK);
+            r.addSegment(new Point(0, 0), min_c.getEnd(), min_c_distance, RouteSection.RouteType.FROM_BASE);
+            r.addSegment(min_c.getEnd(), min_c.getStart(), min_c.getLength(), RouteSection.RouteType.CRACK);
             return min_c.getStart();
         }
     }
@@ -185,12 +185,12 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
 
         // add route and return with current location
         if (start_of_crack) {
-            r.addSegment(p, min_c.getStart(), min_c_distance, RouteLocation.RouteType.BETWEEN_CRACK);
-            r.addSegment(min_c.getStart(), min_c.getEnd(), min_c.getLength(), RouteLocation.RouteType.CRACK);
+            r.addSegment(p, min_c.getStart(), min_c_distance, RouteSection.RouteType.BETWEEN_CRACK);
+            r.addSegment(min_c.getStart(), min_c.getEnd(), min_c.getLength(), RouteSection.RouteType.CRACK);
             return min_c.getEnd();
         } else {
-            r.addSegment(p, min_c.getEnd(), min_c_distance, RouteLocation.RouteType.BETWEEN_CRACK);
-            r.addSegment(min_c.getEnd(), min_c.getStart(), min_c.getLength(), RouteLocation.RouteType.CRACK);
+            r.addSegment(p, min_c.getEnd(), min_c_distance, RouteSection.RouteType.BETWEEN_CRACK);
+            r.addSegment(min_c.getEnd(), min_c.getStart(), min_c.getLength(), RouteSection.RouteType.CRACK);
             return min_c.getStart();
         }
 

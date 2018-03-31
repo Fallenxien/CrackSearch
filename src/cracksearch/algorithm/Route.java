@@ -20,7 +20,7 @@ import java.util.ListIterator;
  */
 public class Route {
 
-    private final List<RouteLocation> route;
+    private final List<RouteSection> route;
     private int numLocations;
     private int currentIndex;
 
@@ -39,16 +39,16 @@ public class Route {
      * @param weight Weight of the segment
      * @param type Type of segment
      */
-    public void addSegment(Point start, Point end, Double weight, RouteLocation.RouteType type) {
-        route.add(new RouteLocation(start, end, weight, type));
+    public void addSegment(Point start, Point end, Double weight, RouteSection.RouteType type) {
+        route.add(new RouteSection(start, end, weight, type));
         numLocations++;
     }
 
     /**
      * Returns a list iterator with all locations in the route
-     * @return ListIterator<RouteLocation> list of locations
+     * @return ListIterator<RouteSection> list of locations
      */
-    public ListIterator<RouteLocation> getLocations() {
+    public ListIterator<RouteSection> getLocations() {
         return route.listIterator();
     }
 
@@ -67,7 +67,7 @@ public class Route {
     public double getTotalLength() {
         double length = 0;
 
-        for (RouteLocation step : route) {
+        for (RouteSection step : route) {
             length += step.getWeight();
         }
 
@@ -81,8 +81,8 @@ public class Route {
     public double getTotalCrackLength() {
         double length = 0;
 
-        for (RouteLocation rl : route) {
-            if (rl.getType() == RouteLocation.RouteType.CRACK)
+        for (RouteSection rl : route) {
+            if (rl.getType() == RouteSection.RouteType.CRACK)
                 length += rl.getWeight();
         }
 
@@ -96,8 +96,8 @@ public class Route {
     public double getTotalBetweenCrackLength() {
         double length = 0;
 
-        for (RouteLocation rl : route) {
-            if (rl.getType() == RouteLocation.RouteType.BETWEEN_CRACK)
+        for (RouteSection rl : route) {
+            if (rl.getType() == RouteSection.RouteType.BETWEEN_CRACK)
                 length += rl.getWeight();
         }
 
@@ -111,8 +111,8 @@ public class Route {
     public double getTotalBetweenBaseLength() {
         double length = 0;
 
-        for (RouteLocation rl : route) {
-            if (rl.getType() == RouteLocation.RouteType.TO_BASE || rl.getType() == RouteLocation.RouteType.FROM_BASE)
+        for (RouteSection rl : route) {
+            if (rl.getType() == RouteSection.RouteType.TO_BASE || rl.getType() == RouteSection.RouteType.FROM_BASE)
                 length += rl.getWeight();
         }
 

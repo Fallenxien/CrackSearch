@@ -18,7 +18,7 @@ import cracksearch.util.Point;
 import cracksearch.world.Crack;
 import cracksearch.world.World;
 import cracksearch.algorithm.Route;
-import cracksearch.algorithm.RouteLocation;
+import cracksearch.algorithm.RouteSection;
 
 /**
  * PanelWorldDesigner
@@ -110,13 +110,13 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
 
         // sanity check
         if (lastRoute.getSize() > 2) {
-            ListIterator<RouteLocation> i = lastRoute.getLocations();
-            RouteLocation location;
+            ListIterator<RouteSection> i = lastRoute.getLocations();
+            RouteSection location;
             // add all other points to route
             while (i.hasNext()) {
                 location = i.next();
                 // create next step in path
-                if (location.getType() == RouteLocation.RouteType.CRACK) {
+                if (location.getType() == RouteSection.RouteType.CRACK) {
                     g.setColor(Color.BLACK);
                 } else {
                     g.setColor(Color.BLUE);

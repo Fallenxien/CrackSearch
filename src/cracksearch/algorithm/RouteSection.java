@@ -10,14 +10,14 @@ package cracksearch.algorithm;
 import cracksearch.util.Point;
 
 /**
- * RouteLocation
+ * RouteSection
  *
  * Contains methods and variables describing a Graph.
  *
  * Also contains static methods for common cracksearch.graph functionality.
  */
 @SuppressWarnings("ALL")
-public class RouteLocation {
+public class RouteSection {
 
     /**
      * Details the ground that the robot is travelling over, i.e. is it currently looking at a crack
@@ -64,7 +64,7 @@ public class RouteLocation {
         return endLocation;
     }
 
-    public RouteLocation(Point start, Point end, Double weight, RouteType type) {
+    public RouteSection(Point start, Point end, Double weight, RouteType type) {
         this.startLocation = start;
         this.endLocation = end;
         this.weight = weight;

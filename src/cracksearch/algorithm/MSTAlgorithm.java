@@ -208,11 +208,11 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
         double distance_from_origin = Graph.calcDistanceFromOrigin(v);
 
         // add journey from base to tree
-        r.addSegment(new Point(0,0), v.getPoint(), distance_from_origin, RouteLocation.RouteType.FROM_BASE);
+        r.addSegment(new Point(0,0), v.getPoint(), distance_from_origin, RouteSection.RouteType.FROM_BASE);
         // loop through tree adding nodes to route
         runDFS(v, r, null);
         // add journey back to base
-        r.addSegment(v.getPoint(), new Point(0,0), distance_from_origin, RouteLocation.RouteType.TO_BASE);
+        r.addSegment(v.getPoint(), new Point(0,0), distance_from_origin, RouteSection.RouteType.TO_BASE);
 
         return r;
 
@@ -235,9 +235,9 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
             e = i.next();
             child = Edge.getAssociatedVertex(e,v);
             if (child != parent) {
-                r.addSegment(v.getPoint(), child.getPoint(), e.getWeight(), RouteLocation.RouteType.BETWEEN_CRACK); // add journey to next crack
+                r.addSegment(v.getPoint(), child.getPoint(), e.getWeight(), RouteSection.RouteType.BETWEEN_CRACK); // add journey to next crack
                 runDFS(child, r, v);
-                r.addSegment(child.getPoint(), v.getPoint(), e.getWeight(), RouteLocation.RouteType.BETWEEN_CRACK); // add journey back
+                r.addSegment(child.getPoint(), v.getPoint(), e.getWeight(), RouteSection.RouteType.BETWEEN_CRACK); // add journey back
             }
         }
     }
@@ -256,8 +256,8 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
         Point end = c.getEnd();
 
         // add twice, once for each direction
-        r.addSegment(start, end, c.getLength(), RouteLocation.RouteType.CRACK);
-        r.addSegment(end, start, c.getLength(), RouteLocation.RouteType.CRACK);
+        r.addSegment(start, end, c.getLength(), RouteSection.RouteType.CRACK);
+        r.addSegment(end, start, c.getLength(), RouteSection.RouteType.CRACK);
     }
 
     /**
