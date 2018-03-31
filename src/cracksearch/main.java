@@ -10,6 +10,10 @@ package cracksearch;
 @SuppressWarnings("MethodNameSameAsClassName")
 public class main {
 
+    /**
+     * Main entry point
+     * @param args Command Line Arguments (not used)
+     */
     public static void main(String[] args) {
 
         frmWorldDesigner main_form = new frmWorldDesigner();

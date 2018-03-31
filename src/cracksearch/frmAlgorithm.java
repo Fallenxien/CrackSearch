@@ -119,6 +119,10 @@ public class frmAlgorithm implements AlgorithmListUpdatedListener, WindowListene
 
     }
 
+    /**
+     * Unregisters the algorithm list update listener
+     * @param e window event
+     */
     @Override
     public void windowClosing(WindowEvent e) {
         listLoader.removeAlgorithmListUpdatedListener(this);

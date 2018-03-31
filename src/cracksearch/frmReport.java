@@ -79,6 +79,9 @@ public class frmReport {
         frame.dispose();
     }
 
+    /**
+     * Saves the report to a CSV file of the users choice
+     */
     private void saveToCSV() {
 
         JFileChooser fc = new JFileChooser();
