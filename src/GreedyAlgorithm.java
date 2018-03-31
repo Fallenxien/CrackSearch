@@ -83,12 +83,12 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
         // check if start/end is closer
         if (c_start_distance < c_end_distance) {
             // end is closer
-            start_of_crack = false;
-            min_c_distance = c_end_distance;
-        } else {
-            // start is closer
             start_of_crack = true;
             min_c_distance = c_start_distance;
+        } else {
+            // start is closer
+            start_of_crack = false;
+            min_c_distance = c_end_distance;
         }
 
         // loop through all other cracks

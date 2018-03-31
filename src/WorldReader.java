@@ -77,18 +77,18 @@ public class WorldReader {
         return w;
     }
 
-    private List<Crack> readCracks(int num_cracks, DataInputStream reader) throws IOException {
+    private List<Crack> readCracks(int numCracks, DataInputStream reader) throws IOException {
 
         List<Crack> list = new LinkedList<>();   // list of cracks
 
         // sanity check
-        if (num_cracks > 0) {
+        if (numCracks > 0) {
 
             int num_points;                                    // number of points in crack
             Point[] p;                                         // array for storing points
             double crack_length;                                  // length of crack
 
-            for (int i = 0; i < num_cracks; i++) {
+            for (int i = 0; i < numCracks; i++) {
                 num_points = reader.readInt();
                 crack_length = reader.readDouble();
 

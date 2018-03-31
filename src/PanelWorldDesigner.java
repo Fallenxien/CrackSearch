@@ -277,10 +277,10 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
 
     /**
      * Set the exploration algorithm for the current world
-     * @param exploration_algo Algorithm to use
+     * @param explorationAlgo Algorithm to use
      */
-    public void setExplorationAlgorithm(Class exploration_algo) {
-        world.setExplorationAlgorithm(exploration_algo);
+    public void setExplorationAlgorithm(Class explorationAlgo) {
+        world.setExplorationAlgorithm(explorationAlgo);
     }
 
     @Override

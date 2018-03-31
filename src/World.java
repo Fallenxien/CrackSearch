@@ -82,12 +82,12 @@ public class World {
 
     /**
      * Set the exploration algorithm for the current world
-     * @param exploration_algo Algorithm to use
+     * @param explorationAlgo Algorithm to use
      */
-    public void setExplorationAlgorithm(Class exploration_algo) {
+    public void setExplorationAlgorithm(Class explorationAlgo) {
 
         try {
-            explorationAlgorithm = (ExplorationAlgorithm) exploration_algo.getDeclaredConstructors()[0].newInstance(crackList);
+            explorationAlgorithm = (ExplorationAlgorithm) explorationAlgo.getDeclaredConstructors()[0].newInstance(crackList);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

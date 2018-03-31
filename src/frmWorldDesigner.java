@@ -126,11 +126,11 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
 
     /**
      * Sets the file name of the world in settings
-     * @param file_name World file name
+     * @param fileName World file name
      */
-    private void setWorldName(String file_name) {
-        settings.setProperty(LAST_WORLD_PROPERTY, file_name);
-        frame.setTitle("Crack Search - " + file_name);
+    private void setWorldName(String fileName) {
+        settings.setProperty(LAST_WORLD_PROPERTY, fileName);
+        frame.setTitle("Crack Search - " + fileName);
     }
 
     /**
@@ -241,12 +241,12 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
 
     /**
      * Create a default settings file at the given location
-     * @param settings_file File location to create settings at
+     * @param settingsFile File location to create settings at
      */
-    private void createDefaultSettings(File settings_file) {
+    private void createDefaultSettings(File settingsFile) {
 
         // check folder exists
-        File parent_folder = new File(settings_file.getParent());
+        File parent_folder = new File(settingsFile.getParent());
         if (!parent_folder.exists()) {
             parent_folder.mkdir();
         }
@@ -256,7 +256,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
         settings.putIfAbsent(LAST_WORLD_PROPERTY, "");
         settings.putIfAbsent(LAST_WORLD_PROPERTY, 1);
 
-        writeSettingsFile(settings_file);
+        writeSettingsFile(settingsFile);
 
     }
 
