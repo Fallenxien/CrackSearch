@@ -5,7 +5,11 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
-import util.Point;
+package cracksearch.io;
+
+import cracksearch.util.Point;
+import cracksearch.world.Crack;
+import cracksearch.world.World;
 
 import java.io.*;
 import java.util.ListIterator;

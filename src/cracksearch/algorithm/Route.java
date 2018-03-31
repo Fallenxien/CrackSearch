@@ -5,7 +5,9 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
-import util.Point;
+package cracksearch.algorithm;
+
+import cracksearch.util.Point;
 
 import java.util.ArrayList;
 import java.util.List;

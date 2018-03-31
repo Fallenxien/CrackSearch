@@ -1,4 +1,4 @@
-// Crack Search Project
+package cracksearch.world;// Crack Search Project
 // Andrew Nickells
 // 201123012
 // u5an
@@ -10,7 +10,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
 
-import util.Point;
+import cracksearch.algorithm.ExplorationAlgorithm;
+import cracksearch.algorithm.Route;
+import cracksearch.util.Point;
 
 /**
  * World Object
@@ -81,7 +83,7 @@ public class World {
     }
 
     /**
-     * Set the exploration algorithm for the current world
+     * Set the exploration cracksearch.algorithm for the current world
      * @param explorationAlgo Algorithm to use
      */
     public void setExplorationAlgorithm(Class explorationAlgo) {

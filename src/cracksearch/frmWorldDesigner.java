@@ -5,6 +5,14 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
+package cracksearch;
+
+import cracksearch.world.InvalidWorldFileException;
+import cracksearch.world.World;
+import cracksearch.io.WorldReader;
+import cracksearch.io.WorldWriter;
+import cracksearch.algorithm.Route;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.*;
@@ -12,7 +20,7 @@ import java.io.*;
 import java.util.Properties;
 
 /**
- * frmWorldDesigner
+ * cracksearch.frmWorldDesigner
  *
  * Holds all code for creating and managing the World Designer form and all associated events.
  */
@@ -283,7 +291,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
         // add crack button
         btnDrawCrack.addActionListener(e -> pnlDesigner.enterDrawingMode());
 
-        // algorithm selection combo box
+        // cracksearch.algorithm selection combo box
         updateAlgorithmEntries(listLoader.getNames());
         cboAlgorithm.addActionListener(e -> changeAlgorithm());
 
@@ -301,7 +309,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     }
 
     /**
-     * Opens the edit algorithm form
+     * Opens the edit cracksearch.algorithm form
      */
     private void btnEditAlgorithmsPressed() {
         frmAlgorithm algorithm = new frmAlgorithm();
@@ -409,7 +417,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     }
 
     /**
-     * Send the exploration algorithm class to the world designer
+     * Send the exploration cracksearch.algorithm class to the world designer
      * panel
      */
     private void changeAlgorithm() {
@@ -611,8 +619,8 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     }
 
     /**
-     * Updates the algorithm list combo box.
-     * Called when algorithm list changes.
+     * Updates the cracksearch.algorithm list combo box.
+     * Called when cracksearch.algorithm list changes.
      * @param names array of names
      */
     @Override

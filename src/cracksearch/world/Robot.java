@@ -1,9 +1,11 @@
-// Crack Search Project
+package cracksearch.world;// Crack Search Project
 // Andrew Nickells
 // 201123012
 // u5an
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
+
+import cracksearch.algorithm.Route;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

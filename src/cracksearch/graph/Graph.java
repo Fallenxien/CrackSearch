@@ -5,33 +5,29 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
-
-package graph;
+package cracksearch.graph;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import util.Point;
+
+import cracksearch.util.Point;
 
 /**
- * graph.Graph
+ * cracksearch.graph.Graph
  *
  * Contains methods and variables describing a Graph.
  *
- * Also contains static methods for common graph functionality.
+ * Also contains static methods for common cracksearch.graph functionality.
  */
 public class Graph {
 
     private final List<Vertex> verts;
-    private List<Edge> edges;
+    private final List<Edge> edges;
 
     public Graph() {
         verts = new LinkedList<>();
         edges = new LinkedList<>();
-    }
-
-    public Graph(List<Vertex> vertices) {
-        verts = vertices;
     }
 
     public void addVertex(Vertex v) {
@@ -55,7 +51,6 @@ public class Graph {
     }
 
     public void addEdge(Edge e) {
-
         e.getStart().addEdge(e);
         e.getEnd().addEdge(e);
         edges.add(e);
@@ -89,7 +84,7 @@ public class Graph {
     }
 
     /**
-     * Gets the vertex in the graph that matches the given point
+     * Gets the vertex in the cracksearch.graph that matches the given point
      * @param p Point to search for
      * @return Vertex matching p. If no vertex matches returns null
      */
@@ -103,18 +98,18 @@ public class Graph {
     }
 
     /**
-     * Checks to see if a given vertex is in the graph
+     * Checks to see if a given vertex is in the cracksearch.graph
      * @param v Vertex to check
-     * @return true if vertex is in graph, else false
+     * @return true if vertex is in cracksearch.graph, else false
      */
     public boolean contains(Vertex v) {
         return verts.contains(v);
     }
 
     /**
-     * Checks to see if a given point is represented by any vertex in the graph
+     * Checks to see if a given point is represented by any vertex in the cracksearch.graph
      * @param p Point to check
-     * @return true if point is in graph, else false
+     * @return true if point is in cracksearch.graph, else false
      */
     public boolean contains(Point p) {
         for (Vertex v: verts) {
@@ -127,12 +122,12 @@ public class Graph {
 
     /**
      *
-     * adds all edges to the current graph such that when the function finishes
-     * the graph is a 'complete' graph.
+     * adds all edges to the current cracksearch.graph such that when the function finishes
+     * the cracksearch.graph is a 'complete' cracksearch.graph.
      */
     public static void completeGraph(Graph g) {
 
-        // make sure graph has at least 2 vertices
+        // make sure cracksearch.graph has at least 2 vertices
         if (g.getNumVertices() >=  2) {
 
             ListIterator<Vertex> i, j;      // two iterators to walk through list
@@ -169,7 +164,7 @@ public class Graph {
     }
 
     /**
-     * Finds the vertex that is closest to the origin for a given graph
+     * Finds the vertex that is closest to the origin for a given cracksearch.graph
      * @return Vertex that is closest to the origin
      */
     public Vertex findClosestToOrigin() {

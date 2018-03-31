@@ -5,13 +5,15 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
-import java.util.HashMap;
+package cracksearch.algorithm;
+
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
 
-import util.*;
-import graph.*;
+import cracksearch.graph.*;
+import cracksearch.world.Crack;
+import cracksearch.util.*;
 
 /**
  * MSTAlgorithm
@@ -21,9 +23,9 @@ import graph.*;
  *
  * Algorithm to create a route is as follows:
  *
- * First create a minimal spanning tree, following Kruskal's algorithm as a base:
+ * First create a minimal spanning tree, following Kruskal's cracksearch.algorithm as a base:
  *
- * 1) Create an empty graph G
+ * 1) Create an empty cracksearch.graph G
  * 2) For each crack in the world
  *    2a) Add start point to G as a vertex
  * 3) For each vertex in G
@@ -57,11 +59,11 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
             // for every crack
             for (Crack crack : cracks) {
 
-                // add the start position of each crack to graph g
+                // add the start position of each crack to cracksearch.graph g
                 g.addVertex(crack.getPoint(0));
             }
 
-            // then complete the graph
+            // then complete the cracksearch.graph
             Graph.completeGraph(g);
 
             // create MST tree T
@@ -76,7 +78,7 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
     }
 
     /**
-     * Perform kruskals algorithm on a graph to create a minimal spanning tree
+     * Perform kruskals cracksearch.algorithm on a cracksearch.graph to create a minimal spanning tree
      * @param g Graph to use to create Minimal Spanning Tree
      * @return Minimal Spanning Tree
      */
@@ -108,10 +110,10 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
             while (i.hasNext()) {
                 e = i.next();
 
-                // first check if both points are present in the graph,
+                // first check if both points are present in the cracksearch.graph,
                 // if at least 1 is missing then there can not be a cycle
                 if (!(t.contains(e.getStart().getPoint()) && t.contains((e.getEnd().getPoint())))) {
-                    // at least 1 vertex is missing, find and add it to the graph and add edge
+                    // at least 1 vertex is missing, find and add it to the cracksearch.graph and add edge
                     if (t.contains(e.getStart().getPoint())) {
                         // only end is missing
                         v1 = t.getVertex(e.getStart().getPoint());
@@ -132,7 +134,7 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
                     t.addEdge(new Edge(v1,v2,e.getWeight()));
                 } else {
                     if (!checkForCycles(t, e)) {
-                        // no cycles, get the correct vertices for the cloned graph and add this edge to graph
+                        // no cycles, get the correct vertices for the cloned cracksearch.graph and add this edge to cracksearch.graph
                         v1 = t.getVertex(e.getStart().getPoint());
                         v2 = t.getVertex(e.getEnd().getPoint());
                         t.addEdge(new Edge(v1, v2, e.getWeight()));
@@ -145,7 +147,7 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
     }
 
     /**
-     * Checks if a graph will have cycles when the edge e is added.
+     * Checks if a cracksearch.graph will have cycles when the edge e is added.
      * @param g Graph to check
      * @param e Edge to check
      * @return true if cycles exist, otherwise false
@@ -161,11 +163,11 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
     }
 
     /**
-     * Checks for cycles in a graph by recursively performing a DFS on the given vertex.
+     * Checks for cycles in a cracksearch.graph by recursively performing a DFS on the given vertex.
      * @param v Vertex to search from
      * @param visited stack containing visited nodes
      * @param parent Parent node, used to make sure we arent trying to walk back to parent
-     * @return true if graph contains cycles
+     * @return true if cracksearch.graph contains cycles
      */
     private boolean checkForCyclesUtil(Vertex v, Stack<Vertex> visited, Vertex parent) {
 
@@ -279,7 +281,7 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
     }
 
     /**
-     * Returns with algorithm name.
+     * Returns with cracksearch.algorithm name.
      * @return "MST"
      */
     @SuppressWarnings("SameReturnValue")

@@ -5,10 +5,12 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
+package cracksearch;
+
 /**
  * AlgorithmListUpdatedListener
  *
- * Called by frmAlgorithm to notify listeners the list of algorithms has changed
+ * Called by cracksearch.frmAlgorithm to notify listeners the list of algorithms has changed
  */
 public interface AlgorithmListUpdatedListener {
     void AlgorithmListUpdatedListener(String[] names);

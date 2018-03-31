@@ -5,6 +5,10 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
+package cracksearch;
+
+import cracksearch.algorithm.Route;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.math.RoundingMode;

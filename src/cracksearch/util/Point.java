@@ -5,10 +5,10 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
-package util;
+package cracksearch.util;
 
 /**
- * util.Point
+ * cracksearch.util.Point
  *
  * Basic point class
  */

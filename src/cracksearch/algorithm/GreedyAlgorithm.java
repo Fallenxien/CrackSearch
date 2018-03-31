@@ -5,7 +5,10 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
-import util.Point;
+package cracksearch.algorithm;
+
+import cracksearch.util.Point;
+import cracksearch.world.Crack;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +34,9 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
         super(cracks);
     }
 
+    /**
+     * Calculates a route to navigate the cracks given via the constructor.
+     */
     @Override
     protected Route calculateRoute() {
 
@@ -38,7 +44,7 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
 
             LinkedList<Crack> cracks_copy = new LinkedList<>(cracks);
 
-            // run algorithm
+            // run cracksearch.algorithm
             return runGreedyAlgorithm(cracks_copy);
         }
 
@@ -46,6 +52,9 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
         return new Route(0);
     }
 
+    /**
+     * Implements the Greedy route selection algorithm. Algorithm is outlined in class description.
+     */
     private Route runGreedyAlgorithm(List<Crack> cracks) {
 
         Route r = new Route(cracks.size() * 2 + 1);
@@ -205,7 +214,7 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
     }
 
     /**
-     * Returns with algorithm name.
+     * Returns with cracksearch.algorithm name.
      * @return "Greedy"
      */
     @SuppressWarnings("SameReturnValue")

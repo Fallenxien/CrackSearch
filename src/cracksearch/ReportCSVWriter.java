@@ -5,6 +5,10 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
+package cracksearch;
+
+import cracksearch.algorithm.Route;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

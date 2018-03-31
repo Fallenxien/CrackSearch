@@ -5,12 +5,12 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
-package graph;
+package cracksearch.graph;
 
 /**
- * graph.Edge Object
+ * cracksearch.graph.Edge Object
  *
- * Represents an edge within a graph
+ * Represents an edge within a cracksearch.graph
  */
 public class Edge implements Comparable<Edge> {
 
@@ -62,4 +62,5 @@ public class Edge implements Comparable<Edge> {
             return e.getStart();
         }
     }
+
 }

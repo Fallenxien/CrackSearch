@@ -1,11 +1,11 @@
-// Crack Search Project
+package cracksearch.world;// Crack Search Project
 // Andrew Nickells
 // 201123012
 // u5an
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
-import util.Point;
+import cracksearch.util.Point;
 
 /**
  * Crack Object

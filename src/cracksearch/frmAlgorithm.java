@@ -5,6 +5,11 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
+package cracksearch;
+
+import cracksearch.AlgorithmListUpdatedListener;
+import cracksearch.ExplorationAlgorithmListLoader;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.WindowEvent;
@@ -25,7 +30,7 @@ public class frmAlgorithm implements AlgorithmListUpdatedListener, WindowListene
     private JPanel pnlContainer;
 
     private DefaultListModel<String> listModel;
-    ExplorationAlgorithmListLoader listLoader;
+    private ExplorationAlgorithmListLoader listLoader;
 
     public frmAlgorithm() {
         frame = new JFrame("Custom Algorithms");
@@ -33,7 +38,7 @@ public class frmAlgorithm implements AlgorithmListUpdatedListener, WindowListene
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.pack();
 
-        // setup algorithm list loader
+        // setup cracksearch.algorithm list loader
         listLoader = ExplorationAlgorithmListLoader.getInstance();
         listLoader.addAlgorithmListUpdatedListener(this);
 
@@ -58,7 +63,7 @@ public class frmAlgorithm implements AlgorithmListUpdatedListener, WindowListene
     }
 
     /**
-     * Allows the user to select a .class file they would like to load as a custom algorithm.
+     * Allows the user to select a .class file they would like to load as a custom cracksearch.algorithm.
      * Algorithms must extend the ExplorationAlgorithm class.
      * Called when the add button is pressed.
      */
@@ -90,7 +95,7 @@ public class frmAlgorithm implements AlgorithmListUpdatedListener, WindowListene
     }
 
     /**
-     * Removes the selected algorithm from the program. Called when the remove button is pressed.
+     * Removes the selected cracksearch.algorithm from the program. Called when the remove button is pressed.
      */
     private void removeAlgorithm() {
         listLoader.removeAlgorithm(lstAlgorithms.getSelectedIndex());

@@ -5,6 +5,8 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
+package cracksearch;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -12,7 +14,11 @@ import java.awt.geom.GeneralPath;
 import java.util.*;
 import java.util.List;
 
-import util.Point;
+import cracksearch.util.Point;
+import cracksearch.world.Crack;
+import cracksearch.world.World;
+import cracksearch.algorithm.Route;
+import cracksearch.algorithm.RouteLocation;
 
 /**
  * PanelWorldDesigner
@@ -37,7 +43,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     private Point[] drawingPoints;
     private int currentDrawingPoint;
     private GeneralPath path;
-    private final util.Point mouseLocation;
+    private final cracksearch.util.Point mouseLocation;
     private final List<SimulationFinishedListener> simFinishedListeners;
     private Route lastRoute;
 
@@ -46,7 +52,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         world = new World();
         worldState = new BitSet(NUM_STATE_BITS);
         worldState.set(NOT_DRAWING);
-        mouseLocation = new util.Point();
+        mouseLocation = new cracksearch.util.Point();
         setDoubleBuffered(true);    // TODO: try improve double buffering with BufferStrategy
         simFinishedListeners = new LinkedList<>();
         // add listeners
@@ -92,7 +98,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
      * @param g Graphics object to paint too
      */
     private void paintDrawingCrack(Graphics2D g) {
-        util.Point last_confirmed_point =  drawingPoints[currentDrawingPoint - 1];
+        cracksearch.util.Point last_confirmed_point =  drawingPoints[currentDrawingPoint - 1];
         g.drawLine(last_confirmed_point.x, last_confirmed_point.y, mouseLocation.x, mouseLocation.y);
     }
 
@@ -167,7 +173,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     /*private void startDrawingMultiSegment(MouseEvent e) {
         worldState.set(FIRST_CRACK_DRAWING_MODE, LAST_CRACK_DRAWING_MODE, false);
         worldState.set(MULTI_SEGMENT_MODE);
-        drawingPoints = new util.Point[Crack.MAX_POINTS];
+        drawingPoints = new cracksearch.util.Point[Crack.MAX_POINTS];
         currentDrawingPoint = 0;
         path = new GeneralPath();
         path.moveTo(e.getX(),e.getY());
@@ -183,7 +189,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     private void startSingleSegmentDrawing(MouseEvent e) {
         worldState.set(FIRST_CRACK_DRAWING_MODE, LAST_CRACK_DRAWING_MODE, false);
         worldState.set(SINGLE_SEGMENT_MODE);
-        drawingPoints = new util.Point[Crack.MAX_POINTS];
+        drawingPoints = new cracksearch.util.Point[Crack.MAX_POINTS];
         currentDrawingPoint = 0;
         path = new GeneralPath();
         path.moveTo(e.getX(),e.getY());
@@ -196,7 +202,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
      */
     private void addPoint(MouseEvent e) {
         this.grabFocus();
-        drawingPoints[currentDrawingPoint++] = new util.Point(e.getX(),e.getY());
+        drawingPoints[currentDrawingPoint++] = new cracksearch.util.Point(e.getX(),e.getY());
         path.lineTo(e.getX(),e.getY());
         update(getGraphics());
     }
@@ -209,7 +215,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         // make sure we have at least 1 segment
         if (currentDrawingPoint > 1) {
             // clean up point array
-            util.Point[] tmp = new util.Point[currentDrawingPoint];
+            cracksearch.util.Point[] tmp = new cracksearch.util.Point[currentDrawingPoint];
             System.arraycopy(drawingPoints, 0, tmp, 0, currentDrawingPoint);
             double length = calcLength(tmp);
             world.addCrack(new Crack(tmp, length));
@@ -249,7 +255,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     }
 
     /**
-     * Runs simulation for the current world / algorithm. When simulation has finished calls
+     * Runs simulation for the current world / cracksearch.algorithm. When simulation has finished calls
      * sim finished listeners to notify of completion.
      */
     public void runSimulation() {
@@ -276,7 +282,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     }
 
     /**
-     * Set the exploration algorithm for the current world
+     * Set the exploration cracksearch.algorithm for the current world
      * @param explorationAlgo Algorithm to use
      */
     public void setExplorationAlgorithm(Class explorationAlgo) {

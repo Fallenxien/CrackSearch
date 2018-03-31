@@ -5,6 +5,8 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
+package cracksearch;
+
 @SuppressWarnings("MethodNameSameAsClassName")
 public class main {
 

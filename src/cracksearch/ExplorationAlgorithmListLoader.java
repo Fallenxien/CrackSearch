@@ -5,6 +5,12 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
+package cracksearch;
+
+import cracksearch.algorithm.ExplorationAlgorithm;
+import cracksearch.algorithm.GreedyAlgorithm;
+import cracksearch.algorithm.MSTAlgorithm;
+
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -61,7 +67,7 @@ public class ExplorationAlgorithmListLoader {
     private ExplorationAlgorithmListLoader() {
 
         algorithmListChangedListeners = new LinkedList<>();
-        // set up algorithm folder
+        // set up cracksearch.algorithm folder
         algorithmFolder = new File (ALGO_FOLDER_PATH);
         if (!algorithmFolder.exists()) {
             algorithmFolder.mkdir();
@@ -87,7 +93,7 @@ public class ExplorationAlgorithmListLoader {
     }
 
     /**
-     * Allows the user to select a .class file they would like to load as a custom algorithm.
+     * Allows the user to select a .class file they would like to load as a custom cracksearch.algorithm.
      * Algorithms must extend the ExplorationAlgorithm class.
      * @param f File containing .class file.
      */
@@ -207,7 +213,7 @@ public class ExplorationAlgorithmListLoader {
         try {
             ClassLoader cl = new URLClassLoader(new URL[]{algorithmFolder.toURI().toURL()});
             for (int i = 0;i<file_names.length;i++) {
-                // get algorithm name & add to list
+                // get cracksearch.algorithm name & add to list
                 classes[i+2] = cl.loadClass(stripExtension(file_names[i]));
                 names[i+2] = (String) classes[i+2].getMethod("getAlgorithmName").invoke(null);
             }
@@ -248,7 +254,7 @@ public class ExplorationAlgorithmListLoader {
     }
 
     /**
-     * Removes the selected algorithm from the program.
+     * Removes the selected cracksearch.algorithm from the program.
      */
     public void removeAlgorithm(int index) {
 

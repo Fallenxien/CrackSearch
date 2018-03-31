@@ -5,14 +5,16 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
-import util.Point;
+package cracksearch.algorithm;
+
+import cracksearch.util.Point;
 
 /**
  * RouteLocation
  *
  * Contains methods and variables describing a Graph.
  *
- * Also contains static methods for common graph functionality.
+ * Also contains static methods for common cracksearch.graph functionality.
  */
 @SuppressWarnings("ALL")
 public class RouteLocation {

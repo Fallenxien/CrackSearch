@@ -5,15 +5,13 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
+package cracksearch.graph;
 
-package graph;
-
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import util.Point;
+import cracksearch.util.Point;
 
 /**
  * Graph
@@ -23,7 +21,6 @@ import util.Point;
 public class Vertex {
 
     private final Point position;
-    private HashMap<Vertex, Edge> connections;
     private List<Edge> relations;
 
     public Vertex(Point pos) {
