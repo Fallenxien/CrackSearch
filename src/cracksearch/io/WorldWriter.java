@@ -37,11 +37,20 @@ public class WorldWriter {
     private final File f;
     private final World w;
 
+    /**
+     * Creates a world writer with the given file and world
+     * @param f File to write too
+     * @param w World to save
+     */
     public WorldWriter(File f, World w) {
         this.f = f;
         this.w = w;
     }
 
+    /**
+     * Saves the world to file.
+     * @throws IOException IO Exception
+     */
     public void save() throws IOException {
 
         DataOutputStream writer = new DataOutputStream(new FileOutputStream(f));
@@ -58,6 +67,11 @@ public class WorldWriter {
 
     }
 
+    /**
+     * Writes the cracks to file
+     * @param writer output stream to write too
+     * @throws IOException IO Exception
+     */
     private void writeCracks(DataOutputStream writer)throws IOException {
 
         ListIterator<Crack> cracks = w.getCrackIterator();

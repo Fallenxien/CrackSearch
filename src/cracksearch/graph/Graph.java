@@ -30,18 +30,36 @@ public class Graph {
         edges = new LinkedList<>();
     }
 
+    /**
+     * Add a vertex to the graph
+     * @param v Vertex to add
+     */
     public void addVertex(Vertex v) {
         verts.add(v);
     }
 
+    /**
+     * Add a vertex to the graph with the location supplied in p.
+     * @param p Location to add vertex
+     */
     public void addVertex(Point p) {
         verts.add(new Vertex(p));
     }
 
+    /**
+     * Remove a vertex from the graph
+     * @param v Vertex to remove
+     */
     public void removeVertex(Vertex v) {
         verts.remove(v);
     }
 
+    /**
+     * Add an edge to the graph by giving the two vertexes to connect.
+     * Weight of edge is given as the distance between the two vertices.
+     * @param v1 First vertex on edge
+     * @param v2 Second vertex on edge
+     */
     public void addEdge(Vertex v1, Vertex v2) {
         double weight = calcDistance(v1, v2);
         Edge e = new Edge(v1, v2, weight);
@@ -50,35 +68,63 @@ public class Graph {
         edges.add(e);
     }
 
+    /**
+     * Add an edge to the graph.
+     * @param e Edge to add
+     */
     public void addEdge(Edge e) {
         e.getStart().addEdge(e);
         e.getEnd().addEdge(e);
         edges.add(e);
     }
 
+    /**
+     * Remove an edge from the graph.
+     * @param e Edge to remove
+     */
     public void removeEdge(Edge e) {
         e.getStart().removeEdge(e);
         e.getEnd().removeEdge(e);
         edges.remove(e);
     }
 
+    /**
+     * Gets a ListIterator containing edges of the graph
+     * @return Iterator over edges
+     */
     public ListIterator<Edge> getEdgeIterator() {
         return edges.listIterator();
     }
 
+    /**
+     * Retrieves a sorted list iterator (edges sorted in ascending order)
+     * @return Iterator over sorted edges
+     */
     public ListIterator<Edge> getSortedEdgeIterator() {
         edges.sort(null);
         return edges.listIterator();
     }
 
+    /**
+     * Gets a ListIterator containing vertices of the graph
+     * @return Iterator over vertices
+     */
     public ListIterator<Vertex> getVertexIterator() {
         return verts.listIterator();
     }
 
+    /**
+     * Gets the number of vertices in the graph
+     * @return number of vertices
+     */
     public int getNumVertices() {
         return verts.size();
     }
 
+    /**
+     * Gets the number of edges in the graph
+     * @return number of edges
+     */
     public int getNumEdges() {
         return edges.size();
     }

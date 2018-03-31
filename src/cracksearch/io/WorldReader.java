@@ -37,18 +37,33 @@ public class WorldReader {
     private final File f;
     private final World w;
 
+    /**
+     * Creates a world reader object with the given file
+     * @param f File to load
+     * @throws InvalidWorldFileException F is not a valid world file
+     * @throws java.io.FileNotFoundException IO Exception
+     */
     public WorldReader(File f) throws InvalidWorldFileException, java.io.FileNotFoundException {
         this.f = f;
         w = new World();
         load();
     }
 
+    /**
+     * Creates a world reader object with the given file path
+     * @param filepath File path to load
+     * @throws InvalidWorldFileException F is not a valid world file
+     * @throws java.io.FileNotFoundException IO Exception
+     */
     public WorldReader(String filepath) throws InvalidWorldFileException, java.io.FileNotFoundException {
         f = new File(filepath);
         w = new World();
         load();
     }
 
+    /**
+     * Loads the world from the world file
+     */
     private void load() throws InvalidWorldFileException, java.io.FileNotFoundException {
 
         DataInputStream reader;
@@ -78,10 +93,21 @@ public class WorldReader {
 
     }
 
+    /**
+     * Returns the world file
+     * @return world file
+     */
     public World getWorld() {
         return w;
     }
 
+    /**
+     * Reads the cracks from the given input stream
+     * @param numCracks number of cracks to read
+     * @param reader input stream to use
+     * @return List of cracks in the file
+     * @throws IOException IO Exception
+     */
     private List<Crack> readCracks(int numCracks, DataInputStream reader) throws IOException {
 
         List<Crack> list = new LinkedList<>();   // list of cracks

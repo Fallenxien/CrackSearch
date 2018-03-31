@@ -24,18 +24,35 @@ public class Edge implements Comparable<Edge> {
         this.weight = weight;
     }
 
+    /**
+     * Gets the weight of the edge
+     * @return Weight of edge
+     */
     public double getWeight() {
         return weight;
     }
 
+    /**
+     * Gets the start vertex of this section
+     * @return start vertex
+     */
     public Vertex getStart() {
         return start;
     }
 
+    /**
+     * Gets the end vertex of this section
+     * @return end vertex
+     */
     public Vertex getEnd() {
         return end;
     }
 
+    /**
+     * Compare two edges to see which is smaller.
+     * @param o Edge to compare too
+     * @return 1 if edge o is larger, -1 if edge o is smaller and 0 if edges are the same length
+     */
     @Override
     public int compareTo(Edge o) {
 

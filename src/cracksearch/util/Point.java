@@ -27,6 +27,11 @@ public class Point {
         y = 0;
     }
 
+    /**
+     * Checks if two points have the same location
+     * @param p Point to compare too
+     * @return true if p has same location
+     */
     public boolean equals(Point p) {
         return (p.x == x && p.y == y);
     }

@@ -28,28 +28,52 @@ public class Vertex {
         relations = new LinkedList<>();
     }
 
+    /**
+     * Gets the X position of the vertex
+     * @return X position
+     */
     public int getX() {
         return position.x;
     }
 
+    /**
+     * Gets the X position of the vertex
+     * @return Y position
+     */
     public int getY() {
         return position.y;
     }
 
+    /**
+     * Gets the position of the vertex
+     * @return Point containing position
+     */
     public Point getPoint() {
         return position;
     }
 
+    /**
+     * Gets an iterator containing the edges connected to the vertex
+     * @return Iterator of connected edges
+     */
     public ListIterator<Edge> getEdges() {
         return relations.listIterator();
     }
 
+    /**
+     * Adds an edge to the vertex
+     * @param e edge to add to vertex
+     */
     public void addEdge(Edge e) {
         if (!relations.contains(e)) {
             relations.add(e);
         }
     }
 
+    /**
+     * Removes an edge from the vertex
+     * @param e edge to remove
+     */
     public void removeEdge(Edge e) {
         relations.remove(e);
     }

@@ -48,14 +48,21 @@ public class RouteLocation {
         return weight;
     }
 
+    /**
+     * Gets the start location of this section
+     * @return Point containing start location
+     */
     public Point getStart() {
         return startLocation;
     }
 
+    /**
+     * Gets the end location of this section
+     * @return Point containing end location
+     */
     public Point getEnd() {
         return endLocation;
     }
-
 
     public RouteLocation(Point start, Point end, Double weight, RouteType type) {
         this.startLocation = start;
