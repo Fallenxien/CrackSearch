@@ -22,10 +22,18 @@ public abstract class ExplorationAlgorithm {
 
     protected List<Crack> cracks;
 
+    /**
+     * Required constructor for implementations to work as intended. Setups the mnodular level crack list.
+     * @param cracks List of cracks to explore
+     */
     protected ExplorationAlgorithm(List<Crack> cracks) {
         setCrackList(cracks);
     }
 
+    /**
+     * Sets the crack list
+     * @param cracks List to set
+     */
     private void setCrackList(List<Crack> cracks) {
         this.cracks = cracks;
     }
