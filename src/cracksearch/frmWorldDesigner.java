@@ -417,6 +417,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
      * detailing the results of the simulation
      */
     private void runSimulation() {
+        changeAlgorithm();
         pnlDesigner.runSimulation();
     }
 
@@ -520,6 +521,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
      */
     private void loadWorld(File f) {
         try {
+            clearRoute();
             setWorldFile(f);
             WorldReader reader = new WorldReader(f);
             pnlDesigner.setWorld(reader.getWorld());

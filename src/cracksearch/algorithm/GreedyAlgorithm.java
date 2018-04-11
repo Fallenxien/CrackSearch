@@ -155,11 +155,11 @@ public class GreedyAlgorithm extends ExplorationAlgorithm {
         c_end_distance = calcDistanceBetween(min_c.getEnd(), lastSection.getEndLocation());
         // check if start/end is closer
         if (c_start_distance < c_end_distance) {
-            start_of_crack = false;
-            min_c_distance = c_end_distance;
-        } else {
             start_of_crack = true;
             min_c_distance = c_start_distance;
+        } else {
+            start_of_crack = false;
+            min_c_distance = c_end_distance;
         }
 
         // loop through all other cracks
