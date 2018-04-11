@@ -27,7 +27,6 @@ import cracksearch.algorithm.RouteSection;
  */
 public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
 
-
     private static final int NOT_DRAWING = 0;
     private static final int WAITING_FOR_INPUT = 1;
     private static final int SINGLE_SEGMENT_MODE = 2;
@@ -84,6 +83,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         super.paint(g);
 
         Graphics2D g2d = (Graphics2D) g;
+        g2d.setStroke(new BasicStroke(2));
         world.drawWorld(g2d);
         if (worldState.get(SINGLE_SEGMENT_MODE)) {
             paintDrawingCrack(g2d);
@@ -119,7 +119,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
                 if (location.getType() == RouteSection.RouteType.CRACK) {
                     g.setColor(Color.BLACK);
                 } else {
-                    g.setColor(Color.BLUE);
+                    g.setColor(Color.GREEN);
                 }
                 g.drawLine(location.getStartLocation().x, location.getStartLocation().y, location.getEndLocation().x, location.getEndLocation().y);
 
@@ -136,6 +136,26 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     public void enterDrawingMode() {
         worldState.set(FIRST_CRACK_DRAWING_MODE, LAST_CRACK_DRAWING_MODE, false);
         worldState.set(WAITING_FOR_INPUT);
+    }
+
+    public void createRandomData() {
+
+        Random rand = new Random();
+        int world_width = world.getWidth();
+        int world_height = world.getHeight();
+        Point[] p;
+        double length;
+
+        for (int i = 0; i<World.MAX_CRACKS;i++) {
+            p = new Point[2];
+            p[0] = new Point(rand.nextInt(world_width),rand.nextInt(world_height));
+            p[1] = new Point(rand.nextInt(world_width),rand.nextInt(world_height));
+            length = calcLength(p);
+            world.addCrack(new Crack(p,length));
+        }
+
+        update(getGraphics());
+
     }
 
     @Override

@@ -53,6 +53,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     private JButton btnClearRoute;
     private JButton btnShowReport;
     private JButton btnEditAlg;
+    private JButton btnRandomData;
     private JMenuItem menuItemSave;
     private Properties settings;
 
@@ -304,8 +305,11 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
         // show report button
         btnShowReport.addActionListener(e -> showReport());
 
+        // edit algorithm list button
         btnEditAlg.addActionListener(e -> btnEditAlgorithmsPressed());
 
+        // random world data
+        btnRandomData.addActionListener(e -> createRandomWorld());
     }
 
     /**
@@ -459,9 +463,20 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
      * Routines for creating a new world
      */
     private void newWorld() {
+        clearRoute();
         setWorldFile(null);
         pnlDesigner.setWorld(new World());
         changeAlgorithm();
+    }
+
+    private void createRandomWorld() {
+
+        if (JOptionPane.showConfirmDialog(pnlContainer, "Creating random data will clear the current world data. Are you sure you wish to continue?")
+                == JOptionPane.YES_OPTION) {
+            newWorld();
+            pnlDesigner.createRandomData();
+        }
+
     }
 
     /**

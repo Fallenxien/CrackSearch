@@ -26,10 +26,13 @@ public class World {
 
     @SuppressWarnings("WeakerAccess")
     public static final int MAX_ROBOTS = 1;
-    public static final int MAX_CRACKS = 200;
+    public static final int MAX_CRACKS = 30;
 
-    private int width;
-    private int height;
+    public static final int MAX_WIDTH = 950;
+    public static final int MAX_HEIGHT = 800;
+
+    private int width = MAX_WIDTH;
+    private int height = MAX_HEIGHT;
     private List<Robot> robotList;
     private List<Crack> crackList;
     private ExplorationAlgorithm explorationAlgorithm;
