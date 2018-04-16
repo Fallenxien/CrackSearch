@@ -45,6 +45,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     private final cracksearch.util.Point mouseLocation;
     private final List<SimulationFinishedListener> simFinishedListeners;
     private Route lastRoute;
+    private Crack selectedCrack;
 
     public PanelWorldDesigner() {
         super();
@@ -76,6 +77,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     public void setWorld(World w){
         world = w;
         update(getGraphics());      // send draw request
+        clearSelectedCrack();
     }
 
     @Override
@@ -91,6 +93,27 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         if (worldState.get(SHOW_LAST_ROUTE_MODE)) {
             paintLastRoute(g2d);
         }
+        if (selectedCrack != null) {
+            paintSelectedCrack(g2d);
+        }
+    }
+
+    /**
+     * paint the selected crack, stored in selectedCrack module variable.
+     * @param g Graphics object to use
+     */
+    private void paintSelectedCrack(Graphics2D g) {
+        GeneralPath path = new GeneralPath();
+        // create path
+        path.moveTo(selectedCrack.getPoint(0).x, selectedCrack.getPoint(0).y);
+        for (int j = 1; j < selectedCrack.numPoints(); j++) {
+            path.lineTo(selectedCrack.getPoint(j).x, selectedCrack.getPoint(j).y);
+        }
+        // draw
+        g.setColor(Color.blue);
+        g.draw(path);
+        world.drawCrackWeight(g, selectedCrack);
+        g.setColor(Color.black);
     }
 
     /**
@@ -138,6 +161,21 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         worldState.set(WAITING_FOR_INPUT);
     }
 
+    /**
+     * Deletes the selected crack
+     */
+    public void deleteSelectedCrack() {
+        if (selectedCrack != null) {
+            clearRoute();
+            world.removeCrack(selectedCrack);
+            clearSelectedCrack();
+            update(getGraphics());
+        }
+    }
+
+    /**
+     * Creates random world data.
+     */
     public void createRandomData() {
 
         Random rand = new Random();
@@ -162,20 +200,26 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     public void mouseClicked(MouseEvent e) {
 
         if (worldState.get(WAITING_FOR_INPUT)) {
-                if (e.isShiftDown()) {
-                    // TODO: multi segment mode
-                    //startDrawing(e);
-                    //addPoint(e);
-                } else {
-                    startSingleSegmentDrawing(e);
-                }
+
+            if (e.isShiftDown()) {
+                // TODO: multi segment mode
+                //startDrawing(e);
+                //addPoint(e);
+            } else {
+                startSingleSegmentDrawing(e);
+            }
         } else if (worldState.get(MULTI_SEGMENT_MODE)) {
-                if (e.isShiftDown()) {
-                    addPoint(e);
-                }
-        } else if (worldState.get(SINGLE_SEGMENT_MODE)) {
+            if (e.isShiftDown()) {
                 addPoint(e);
-                finishDrawing();
+            }
+        } else if (worldState.get(SINGLE_SEGMENT_MODE)) {
+            addPoint(e);
+            finishDrawing();
+        } else if (worldState.get(NOT_DRAWING)) {
+            selectedCrack = world.checkCrackCollision(new Point(e.getX(), e.getY()));
+            if (selectedCrack != null) {
+                update(getGraphics());
+            }
         }
 
     }
@@ -285,12 +329,20 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         lastRoute = world.getRoute();
         // draw the route on screen
         worldState.set(SHOW_LAST_ROUTE_MODE);
+        clearSelectedCrack();
         update(getGraphics());
 
         for (SimulationFinishedListener listener : simFinishedListeners) {
             listener.simulationFinished(lastRoute);
         }
 
+    }
+
+    /**
+     * Clears the selected crack
+     */
+    private void clearSelectedCrack() {
+        selectedCrack = null;
     }
 
     /**
@@ -310,9 +362,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
+    public void mousePressed(MouseEvent e) {    }
 
     @Override
     public void mouseReleased(MouseEvent e) {

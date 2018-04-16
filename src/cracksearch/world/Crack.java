@@ -1,10 +1,13 @@
-package cracksearch.world;// Crack Search Project
+// Crack Search Project
 // Andrew Nickells
 // 201123012
 // u5an
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
+package cracksearch.world;
+
+import cracksearch.util.CrackClickArea;
 import cracksearch.util.Point;
 
 /**
@@ -20,14 +23,13 @@ public class Crack {
 
     private Point[] points;
     private double length;
-
-    public Crack() {
-
-    }
+    private CrackClickArea clickArea;
 
     public Crack(Point[] points, double length) {
         this.points = points;
         this.length = length;
+
+        clickArea = new CrackClickArea(getStart(), getEnd());
     }
 
     public Point getPoint(int index) {
@@ -48,5 +50,9 @@ public class Crack {
 
     public int numPoints() {
         return points.length;
+    }
+
+    public boolean contains(Point p) {
+        return clickArea.contains(p);
     }
 }

@@ -1,9 +1,11 @@
-package cracksearch.world;// Crack Search Project
+// Crack Search Project
 // Andrew Nickells
 // 201123012
 // u5an
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
+
+package cracksearch.world;
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.lang.reflect.InvocationTargetException;
@@ -26,7 +28,7 @@ public class World {
 
     @SuppressWarnings("WeakerAccess")
     public static final int MAX_ROBOTS = 1;
-    public static final int MAX_CRACKS = 30;
+    public static final int MAX_CRACKS = 20;
 
     public static final int MAX_WIDTH = 950;
     public static final int MAX_HEIGHT = 800;
@@ -141,7 +143,7 @@ public class World {
      * @param g Graphics object to draw too
      * @param c Crack object to get weight/location info
      */
-    private void drawCrackWeight(Graphics2D g, Crack c) {
+    public void drawCrackWeight(Graphics2D g, Crack c) {
 
         // find center point of crack
         Point center = new Point();
@@ -156,12 +158,35 @@ public class World {
     }
 
     /**
+     * Removes a crack from the crack list
+     * @param c Crack to remove
+     */
+    public void removeCrack(Crack c) {
+        crackList.remove(c);
+    }
+
+    /**
      * Draws the robot in its current state
      * @param g Graphics2d object
      * TODO: decide if we want to draw robot or not (probably dependant on animation?)
      */
     private void drawRobot(Graphics2D g) {
         //robotList.get(0).drawRobot(g);
+    }
+
+    /**
+     * Checks for crack collisions with the given point
+     * @param p Point to check
+     * @return first crack that p collided with, null if no collisions
+     */
+    public Crack checkCrackCollision(Point p) {
+        for (Crack c: crackList) {
+            if (c.contains(p)) {
+                return c;
+            }
+        }
+
+        return null;
     }
 
 }

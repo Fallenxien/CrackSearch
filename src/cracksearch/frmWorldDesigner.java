@@ -54,6 +54,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     private JButton btnShowReport;
     private JButton btnEditAlg;
     private JButton btnRandomData;
+    private JButton btnDeleteCrack;
     private JMenuItem menuItemSave;
     private Properties settings;
 
@@ -310,6 +311,9 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
 
         // random world data
         btnRandomData.addActionListener(e -> createRandomWorld());
+
+        // delete crack
+        btnDeleteCrack.addActionListener(e -> btnDeleteCrackPressed());
     }
 
     /**
@@ -318,6 +322,13 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     private void btnEditAlgorithmsPressed() {
         frmAlgorithm algorithm = new frmAlgorithm();
         algorithm.show();
+    }
+
+    /**
+     * Deletes the selected crack
+     */
+    private void btnDeleteCrackPressed() {
+        pnlDesigner.deleteSelectedCrack();
     }
 
     /**
