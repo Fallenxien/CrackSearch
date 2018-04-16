@@ -58,17 +58,13 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
 
             // for every crack
             for (Crack crack : cracks) {
-
                 // add the start position of each crack to cracksearch.graph g
                 g.addVertex(crack.getPoint(0));
             }
-
             // then complete the cracksearch.graph
             Graph.completeGraph(g);
-
             // create MST tree T
             Graph t = runKruskals(g);
-
             // create route
             return createRoute(t);
 
@@ -85,7 +81,6 @@ public class MSTAlgorithm extends ExplorationAlgorithm {
     private Graph runKruskals(Graph g) {
 
         Graph t = new Graph();
-
 
         if (g.getNumVertices() < 2) {
             // only 1 vertex in g, so only 1 vertex (0 edges) in t
