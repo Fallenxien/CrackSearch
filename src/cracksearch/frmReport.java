@@ -8,6 +8,7 @@
 package cracksearch;
 
 import cracksearch.algorithm.Route;
+import cracksearch.io.ReportCSVWriter;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

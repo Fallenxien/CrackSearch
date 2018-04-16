@@ -5,7 +5,7 @@
 // A.P.Nickells@student.liverpool.ac.uk
 // University of Liverpool
 
-package cracksearch;
+package cracksearch.io;
 
 import cracksearch.algorithm.Route;
 
