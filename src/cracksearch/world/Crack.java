@@ -32,6 +32,42 @@ public class Crack {
         clickArea = new CrackClickArea(getStart(), getEnd());
     }
 
+    public Crack(Point[] points) {
+        this.points = points;
+        this.length = calcLength(points);
+
+        clickArea = new CrackClickArea(getStart(), getEnd());
+    }
+
+    /**
+     * Calculates the length of a given set of points.
+     * @param crack Point array associated with the crack
+     * @return length of crack as int
+     */
+    private Double calcLength(Point[] crack) {
+
+        double length = 0;
+
+        for (int i = 1;i < crack.length;i++) {
+            length += calcDistanceBetween(crack[i-1], crack[i]);
+        }
+
+        return length;
+    }
+
+    /**
+     * Calculates the distance between 2 points
+     * @param p1 point 1
+     * @param p2 point 2
+     * @return distance between points
+     */
+    private Double calcDistanceBetween(Point p1, Point p2) {
+        double xdiff = p1.x - p2.x;
+        double ydiff = p1.y - p2.y;
+
+        return Math.sqrt(xdiff*xdiff + ydiff*ydiff);
+    }
+
     public Point getPoint(int index) {
         return points[index];
     }

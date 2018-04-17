@@ -7,6 +7,7 @@
 
 package cracksearch;
 
+import cracksearch.world.FixedLengthWorldGenerator;
 import cracksearch.world.InvalidWorldFileException;
 import cracksearch.world.World;
 import cracksearch.io.WorldReader;
@@ -485,9 +486,12 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
 
         if (JOptionPane.showConfirmDialog(pnlContainer, "Creating random data will clear the current world data. Are you sure you wish to continue?")
                 == JOptionPane.YES_OPTION) {
-            newWorld();
+            clearRoute();
+            setWorldFile(null);
             //pnlDesigner.createFullyRandomData();
-            pnlDesigner.createFixedLengthRandomData(100);
+            FixedLengthWorldGenerator generator;
+            generator = new FixedLengthWorldGenerator(World.MAX_CRACKS, 100, World.MAX_WIDTH, World.MAX_HEIGHT);
+            pnlDesigner.setWorld(generator.generateWorld());
         }
 
     }
