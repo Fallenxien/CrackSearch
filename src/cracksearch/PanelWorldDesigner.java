@@ -14,6 +14,7 @@ import java.awt.geom.GeneralPath;
 import java.util.*;
 import java.util.List;
 
+import cracksearch.util.Line;
 import cracksearch.util.Point;
 import cracksearch.world.Crack;
 import cracksearch.world.World;
@@ -174,9 +175,9 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     }
 
     /**
-     * Creates random world data.
+     * Creates random world data, with both length and positions being completely random.
      */
-    public void createRandomData() {
+    public void createFullyRandomData() {
 
         Random rand = new Random();
         int world_width = world.getWidth();
@@ -195,6 +196,57 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         update(getGraphics());
 
     }
+
+    public void createFixedLengthRandomData(double length) {
+
+        Random rand = new Random();
+        int world_width = world.getWidth();
+        int world_height = world.getHeight();
+        Point[] p;
+        double theta;
+        Line l;
+
+        for (int i = 0; i<World.MAX_CRACKS; i++) {
+            p = new Point[2];
+
+            while (true) {
+                p[0] = new Point(rand.nextInt(world_width), rand.nextInt(world_height));
+                l = new Line(p[0], rand.nextDouble());
+                theta = calculateAngle(p[0], l.xIntercept());
+                int adjacent = (int) (length * Math.cos(theta));
+                int opposite = (int) (length * Math.sin(theta));
+                p[1] = new Point(p[0].x - opposite, p[0].y - adjacent);
+
+                if (p[1].x < world_width && p[1].x > 0 && p[1].y < world_height && p[1].y > 0) {
+                    break;
+                }
+
+            }
+
+            world.addCrack(new Crack(p,length));
+        }
+        update(getGraphics());
+    }
+
+    /**
+     * Calculates the angle theta given two points on the line
+     * @param p1 First point to use
+     * @param p2 Second point to use
+     * @return Theta in rads
+     */
+    private double calculateAngle(Point p1, Point p2) {
+
+        // theta is angle between the line between 2 points and the line x = (p1.x)
+        // calculate this by tan-1(opp/adj)
+        double adjacent = p1.y - p2.y;
+        double opposite = p1.x - p2.x;
+        double theta = Math.atan((opposite)/(adjacent));
+
+        return theta;
+
+    }
+
+
 
     @Override
     public void mouseClicked(MouseEvent e) {

@@ -486,7 +486,8 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
         if (JOptionPane.showConfirmDialog(pnlContainer, "Creating random data will clear the current world data. Are you sure you wish to continue?")
                 == JOptionPane.YES_OPTION) {
             newWorld();
-            pnlDesigner.createRandomData();
+            //pnlDesigner.createFullyRandomData();
+            pnlDesigner.createFixedLengthRandomData(100);
         }
 
     }

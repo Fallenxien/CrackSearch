@@ -47,6 +47,24 @@ public class Line {
     }
 
     /**
+     * Creates a line that passes through the point p with gradient m
+     * @param p point line passes through
+     * @param m gradient of line
+     */
+    public Line(Point p, double m) {
+        this.m = m;
+        b = p.y - m * p.x;
+    }
+
+    /**
+     * Gets the co ordinate of the x intercept (when y=0)
+     * @return Point of x intercept
+     */
+    public Point xIntercept() {
+        return new Point((int) ((-b) / m), 0);
+    }
+
+    /**
      * Checks to see if line between the two given points intersects the current line
      * Done by rearranging the line formula to the form mx - y + b = 0. If the two points
      * give results with different signs (i.e. 3 and -3) then the line must intersect at some
