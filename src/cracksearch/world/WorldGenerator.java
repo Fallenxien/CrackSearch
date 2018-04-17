@@ -15,5 +15,5 @@ package cracksearch.world;
  */
 public abstract class WorldGenerator {
 
-    public abstract World generateWorld();
+    public abstract World generateWorld(int numCracks);
 }

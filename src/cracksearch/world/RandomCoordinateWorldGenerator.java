@@ -21,24 +21,26 @@ import java.util.Random;
  */
 public class RandomCoordinateWorldGenerator extends WorldGenerator {
 
-    private int numCracks;
     private int worldWidth;
     private int worldHeight;
 
-    public RandomCoordinateWorldGenerator(int numCracks, int worldWidth, int worldHeight) {
-        this.numCracks = numCracks;
-        this.worldWidth = worldWidth;
-        this.worldHeight = worldHeight;
-    }
-
+    /**
+     * Creates a random coordinate world generator. The generator will create
+     * @param worldWidth width of world
+     * @param worldHeight height of world
+     */
     public RandomCoordinateWorldGenerator(int worldWidth, int worldHeight) {
-        numCracks = World.MAX_CRACKS;
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
     }
 
+    /**
+     * Generates a world with random cracks.
+     * @param numCracks number of cracks to generate
+     * @return Random world
+     */
     @Override
-    public World generateWorld() {
+    public World generateWorld(int numCracks) {
 
         Random rand = new Random();
         Point[] p;

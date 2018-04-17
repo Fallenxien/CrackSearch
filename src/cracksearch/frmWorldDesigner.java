@@ -490,8 +490,8 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
             setWorldFile(null);
             //pnlDesigner.createFullyRandomData();
             FixedLengthWorldGenerator generator;
-            generator = new FixedLengthWorldGenerator(World.MAX_CRACKS, 100, World.MAX_WIDTH, World.MAX_HEIGHT);
-            pnlDesigner.setWorld(generator.generateWorld());
+            generator = new FixedLengthWorldGenerator(100, World.MAX_WIDTH, World.MAX_HEIGHT);
+            pnlDesigner.setWorld(generator.generateWorld(World.MAX_CRACKS));
         }
 
     }

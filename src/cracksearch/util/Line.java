@@ -16,7 +16,13 @@ package cracksearch.util;
  */
 public class Line {
 
+    /**
+     * Gradient of line
+     */
     public double m;
+    /**
+     * Offset (y intercept) of line
+     */
     public double b;
 
     /**
@@ -53,6 +59,7 @@ public class Line {
      */
     public Line(Point p, double m) {
         this.m = m;
+        // b = y - mx
         b = p.y - m * p.x;
     }
 

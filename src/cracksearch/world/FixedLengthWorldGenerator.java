@@ -21,27 +21,37 @@ import java.util.Random;
  */
 public class FixedLengthWorldGenerator extends WorldGenerator {
 
-    private int numCracks;
     private int worldWidth;
     private int worldHeight;
     private int crackLength;
 
-    public FixedLengthWorldGenerator(int numCracks, int crackLength, int worldWidth, int worldHeight) {
-        this.numCracks = numCracks;
+    /**
+     * Creates a fixed length world generator. The generator will create
+     * @param crackLength fixed crack length
+     * @param worldWidth width of world
+     * @param worldHeight height of world
+     */
+    public FixedLengthWorldGenerator(int crackLength, int worldWidth, int worldHeight) {
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
         this.crackLength = crackLength;
     }
 
+    /**
+     * Generates a world with random cracks. All cracks will have the length specified in the
+     * crackLength argument of the constructor
+     * @param numCracks number of cracks to generate
+     * @return Random world
+     */
     @Override
-    public World generateWorld() {
+    public World generateWorld(int numCracks) {
         Random rand = new Random();
         Point[] p;
         double theta;
         Line l;
         World world = new World();
 
-        for (int i = 0; i < World.MAX_CRACKS; i++) {
+        for (int i = 0; i < numCracks; i++) {
             p = new Point[2];
 
             while (true) {
