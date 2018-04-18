@@ -629,6 +629,9 @@ public class frmWorldDesigner implements SimulationFinishedListener, AlgorithmLi
 
     }
 
+    /**
+     * Saves the settings file properly and closes down any open forms.
+     */
      private void onWindowClosing() {
         File settings_file = new File(System.getenv("APPDATA") + APP_DATA_FOLDER + PROPERTIES_FILE_NAME);
         writeSettingsFile(settings_file);

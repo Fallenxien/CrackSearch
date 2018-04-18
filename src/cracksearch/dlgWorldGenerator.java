@@ -111,7 +111,7 @@ public class dlgWorldGenerator extends JDialog {
         rbnFixedLengthGenerator.addActionListener(e -> onGeneratorChanged());
         rbnFullRandomGenerator.addActionListener(e -> onGeneratorChanged());
 
-        // fill values
+        // fill default values
         onCrackLengthChanged();
         onNumCracksChanged();
         onGeneratorChanged();
