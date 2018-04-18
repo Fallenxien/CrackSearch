@@ -7,9 +7,7 @@
 
 package cracksearch;
 
-import cracksearch.world.FixedLengthWorldGenerator;
-import cracksearch.world.InvalidWorldFileException;
-import cracksearch.world.World;
+import cracksearch.world.*;
 import cracksearch.io.WorldReader;
 import cracksearch.io.WorldWriter;
 import cracksearch.algorithm.Route;
@@ -482,16 +480,30 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
         changeAlgorithm();
     }
 
+    /**
+     * Prompts the user if they would like to make a random world. Then shows world generator dialog for user
+     * to customize settings
+     */
     private void createRandomWorld() {
 
         if (JOptionPane.showConfirmDialog(pnlContainer, "Creating random data will clear the current world data. Are you sure you wish to continue?")
                 == JOptionPane.YES_OPTION) {
-            clearRoute();
-            setWorldFile(null);
-            //pnlDesigner.createFullyRandomData();
-            FixedLengthWorldGenerator generator;
-            generator = new FixedLengthWorldGenerator(100, World.MAX_WIDTH, World.MAX_HEIGHT);
-            pnlDesigner.setWorld(generator.generateWorld(World.MAX_CRACKS));
+            dlgWorldGenerator dlg = new dlgWorldGenerator();
+            dlg.setVisible(true);
+            if (dlg.getResult() == dlgWorldGenerator.Result.OK) {
+                clearRoute();
+                setWorldFile(null);
+                WorldGenerator generator;
+                switch (dlg.getGeneratorType()) {
+                    case FIXED_LENGTH:
+                        generator = new FixedLengthWorldGenerator(dlg.getCrackLength(), World.MAX_WIDTH, World.MAX_HEIGHT);
+                        break;
+                    case RANDOM:
+                    default:
+                        generator = new RandomCoordinateWorldGenerator(World.MAX_WIDTH, World.MAX_HEIGHT);
+                }
+                pnlDesigner.setWorld(generator.generateWorld(dlg.getNumCracks()));
+            }
         }
 
     }
