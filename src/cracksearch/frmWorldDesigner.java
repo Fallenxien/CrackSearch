@@ -24,13 +24,7 @@ import java.util.Properties;
  * Holds all code for creating and managing the World Designer form and all associated events.
  */
 @SuppressWarnings("unchecked")
-public class frmWorldDesigner implements ActionListener, SimulationFinishedListener, WindowListener, AlgorithmListUpdatedListener {
-
-    // Action Listener commands
-    private final static String NEW_COMMAND = "new";
-    private final static String OPEN_COMMAND = "open";
-    private final static String SAVE_COMMAND = "save";
-    private final static String SAVE_AS_COMMAND = "save_as";
+public class frmWorldDesigner implements SimulationFinishedListener, AlgorithmListUpdatedListener {
 
     // File Location / Extension Constants
     public final static String APP_DATA_FOLDER = "/CrackSearch/";
@@ -73,7 +67,11 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
         frame.setContentPane(this.pnlContainer);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.pack();
-        frame.addWindowListener(this);
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                onWindowClosing();
+            }
+        });
         frame.setResizable(false);
 
         // list loader
@@ -294,31 +292,31 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
 
         // cracksearch.algorithm selection combo box
         updateAlgorithmEntries(listLoader.getNames());
-        cboAlgorithm.addActionListener(e -> changeAlgorithm());
+        cboAlgorithm.addActionListener(e -> onAlgorithmChanged());
 
         // run button
-        btnRun.addActionListener(e -> runSimulation());
+        btnRun.addActionListener(e -> onRunSimulationPressed());
 
         // clear route button
-        btnClearRoute.addActionListener(e -> clearRoute());
+        btnClearRoute.addActionListener(e -> onClearRoutePressed());
 
         // show report button
-        btnShowReport.addActionListener(e -> showReport());
+        btnShowReport.addActionListener(e -> onShowReportPressed());
 
         // edit algorithm list button
-        btnEditAlg.addActionListener(e -> btnEditAlgorithmsPressed());
+        btnEditAlg.addActionListener(e -> onEditAlgorithmsPressed());
 
         // random world data
-        btnRandomData.addActionListener(e -> createRandomWorld());
+        btnRandomData.addActionListener(e -> onCreateRandomWorldPressed());
 
         // delete crack
-        btnDeleteCrack.addActionListener(e -> btnDeleteCrackPressed());
+        btnDeleteCrack.addActionListener(e -> onDeleteCrackPressed());
     }
 
     /**
      * Opens the edit cracksearch.algorithm form
      */
-    private void btnEditAlgorithmsPressed() {
+    private void onEditAlgorithmsPressed() {
         frmAlgorithm algorithm = new frmAlgorithm();
         algorithm.show();
     }
@@ -326,7 +324,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     /**
      * Deletes the selected crack
      */
-    private void btnDeleteCrackPressed() {
+    private void onDeleteCrackPressed() {
         pnlDesigner.deleteSelectedCrack();
     }
 
@@ -358,27 +356,23 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
 
         // new menu item
         menuItemNew = new JMenuItem("New");
-        menuItemNew.setActionCommand(NEW_COMMAND);
-        menuItemNew.addActionListener(this);
+        menuItemNew.addActionListener(e -> onNewWorldPressed());
         menuFile.add(menuItemNew);
 
         // open menu item
         menuItemOpen = new JMenuItem("Open...");
-        menuItemOpen.setActionCommand(OPEN_COMMAND);
-        menuItemOpen.addActionListener(this);
+        menuItemOpen.addActionListener(e -> onOpenWorldPressed());
         menuFile.add(menuItemOpen);
 
         // save menu item
         menuItemSave = new JMenuItem("Save");
-        menuItemSave.setActionCommand(SAVE_COMMAND);
-        menuItemSave.addActionListener(this);
+        menuItemSave.addActionListener(e -> onSaveWorldAsPressed());
         menuItemSave.setEnabled(false);
         menuFile.add(menuItemSave);
 
         // save as menu item
         menuItemSaveAs = new JMenuItem("Save As...");
-        menuItemSaveAs.setActionCommand(SAVE_AS_COMMAND);
-        menuItemSaveAs.addActionListener(this);
+        menuItemSaveAs.addActionListener(e -> onSaveWorldPressed());
         menuFile.add(menuItemSaveAs);
 
         // bind menu to j frame
@@ -386,37 +380,43 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     }
 
     /**
-     * Handles all world saving and loading events
+     * Saves the world to the specified world file
      */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-        switch (e.getActionCommand()) {
-            case NEW_COMMAND:
-                newWorld();
-                break;
-            case OPEN_COMMAND:
-                File f = getWorldFileToOpen();
-                if (f != null) {
-                    loadWorld(f);
-                }
-                break;
-            case SAVE_AS_COMMAND:
-                if (!getWorldFileToSave()) {
-                    break;
-                }
-            case SAVE_COMMAND:
-                saveWorld(getWorldFile());
-                break;
+    private void onSaveWorldAsPressed() {
+        if (getWorldFileToSave()) {
+            saveWorld(getWorldFile());
         }
+    }
 
+    /**
+     * Saves the world to the previous world file
+     */
+    private void onSaveWorldPressed() {
+        saveWorld(getWorldFile());
+    }
+
+    /**
+     * Opens a world file of the user's choice. Old world is discarded without saving.
+     */
+    private void onOpenWorldPressed() {
+        File f = getWorldFileToOpen();
+        if (f != null) {
+            loadWorld(f);
+        }
+    }
+
+    /**
+     * Creates a new world. Old world is discarded without saving.
+     */
+    private void onNewWorldPressed() {
+        newWorld();
     }
 
     /**
      * Clear the current route from the designer. Also disable buttons
      * relying on a route.
      */
-    private void clearRoute() {
+    private void onClearRoutePressed() {
         pnlDesigner.clearRoute();
         btnClearRoute.setEnabled(false);
         btnShowReport.setEnabled(false);
@@ -426,8 +426,8 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
      * Runs the simulation and creates the report form
      * detailing the results of the simulation
      */
-    private void runSimulation() {
-        changeAlgorithm();
+    private void onRunSimulationPressed() {
+        onAlgorithmChanged();
         pnlDesigner.runSimulation();
     }
 
@@ -435,7 +435,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
      * Send the exploration cracksearch.algorithm class to the world designer
      * panel
      */
-    private void changeAlgorithm() {
+    private void onAlgorithmChanged() {
 
         Class c;
 
@@ -474,24 +474,24 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
      * Routines for creating a new world
      */
     private void newWorld() {
-        clearRoute();
+        onClearRoutePressed();
         setWorldFile(null);
         pnlDesigner.setWorld(new World());
-        changeAlgorithm();
+        onAlgorithmChanged();
     }
 
     /**
      * Prompts the user if they would like to make a random world. Then shows world generator dialog for user
      * to customize settings
      */
-    private void createRandomWorld() {
+    private void onCreateRandomWorldPressed() {
 
         if (JOptionPane.showConfirmDialog(pnlContainer, "Creating random data will clear the current world data. Are you sure you wish to continue?")
                 == JOptionPane.YES_OPTION) {
             dlgWorldGenerator dlg = new dlgWorldGenerator();
             dlg.setVisible(true);
             if (dlg.getResult() == dlgWorldGenerator.Result.OK) {
-                clearRoute();
+                onClearRoutePressed();
                 setWorldFile(null);
                 WorldGenerator generator;
                 switch (dlg.getGeneratorType()) {
@@ -549,7 +549,7 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
      */
     private void loadWorld(File f) {
         try {
-            clearRoute();
+            onClearRoutePressed();
             setWorldFile(f);
             WorldReader reader = new WorldReader(f);
             pnlDesigner.setWorld(reader.getWorld());
@@ -604,14 +604,14 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
      * supplied route
      * @param r Route to report
      */
-    private void showReport(Route r) {
+    private void onShowReportPressed(Route r) {
         report.showReport(r);
     }
 
     /**
      * Shows the report form.
      */
-    private void showReport() {
+    private void onShowReportPressed() {
         report.showReport();
     }
 
@@ -623,44 +623,17 @@ public class frmWorldDesigner implements ActionListener, SimulationFinishedListe
     public void simulationFinished(Route r) {
 
 
-        showReport(r);
+        onShowReportPressed(r);
         btnClearRoute.setEnabled(true);
         btnShowReport.setEnabled(true);
 
     }
 
-    @Override
-    public void windowOpened(WindowEvent e) { }
-
-    @Override
-    public void windowClosing(WindowEvent e) {
+     private void onWindowClosing() {
         File settings_file = new File(System.getenv("APPDATA") + APP_DATA_FOLDER + PROPERTIES_FILE_NAME);
         writeSettingsFile(settings_file);
 
         report.close();
-    }
-
-    @Override
-    public void windowClosed(WindowEvent e) { }
-
-    @Override
-    public void windowIconified(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowActivated(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowDeactivated(WindowEvent e) {
-
     }
 
     /**
