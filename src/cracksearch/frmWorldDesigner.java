@@ -366,13 +366,13 @@ public class frmWorldDesigner implements SimulationFinishedListener, AlgorithmLi
 
         // save menu item
         menuItemSave = new JMenuItem("Save");
-        menuItemSave.addActionListener(e -> onSaveWorldAsPressed());
+        menuItemSave.addActionListener(e -> onSaveWorldPressed());
         menuItemSave.setEnabled(false);
         menuFile.add(menuItemSave);
 
         // save as menu item
         menuItemSaveAs = new JMenuItem("Save As...");
-        menuItemSaveAs.addActionListener(e -> onSaveWorldPressed());
+        menuItemSaveAs.addActionListener(e -> onSaveWorldAsPressed());
         menuFile.add(menuItemSaveAs);
 
         // bind menu to j frame
@@ -417,9 +417,7 @@ public class frmWorldDesigner implements SimulationFinishedListener, AlgorithmLi
      * relying on a route.
      */
     private void onClearRoutePressed() {
-        pnlDesigner.clearRoute();
-        btnClearRoute.setEnabled(false);
-        btnShowReport.setEnabled(false);
+        pnlDesigner.removeLastRoute();
     }
 
     /**
@@ -491,7 +489,7 @@ public class frmWorldDesigner implements SimulationFinishedListener, AlgorithmLi
             dlgWorldGenerator dlg = new dlgWorldGenerator();
             dlg.setVisible(true);
             if (dlg.getResult() == dlgWorldGenerator.Result.OK) {
-                onClearRoutePressed();
+                pnlDesigner.clearStoredRoutes();
                 setWorldFile(null);
                 WorldGenerator generator;
                 switch (dlg.getGeneratorType()) {
@@ -624,7 +622,6 @@ public class frmWorldDesigner implements SimulationFinishedListener, AlgorithmLi
 
 
         onShowReportPressed(r);
-        btnClearRoute.setEnabled(true);
         btnShowReport.setEnabled(true);
 
     }

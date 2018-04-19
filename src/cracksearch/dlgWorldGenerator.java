@@ -8,6 +8,8 @@
 package cracksearch;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.event.*;
 
 /**
@@ -110,6 +112,41 @@ public class dlgWorldGenerator extends JDialog {
         txtNumCracks.addActionListener(e -> onNumCracksChanged());
         rbnFixedLengthGenerator.addActionListener(e -> onGeneratorChanged());
         rbnFullRandomGenerator.addActionListener(e -> onGeneratorChanged());
+
+        // document listeners only way to guarantee we get all events from text box updates
+        txtCrackLength.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                onCrackLengthChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                onCrackLengthChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                onCrackLengthChanged();
+            }
+        });
+        txtNumCracks.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                onNumCracksChanged();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                onNumCracksChanged();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                onNumCracksChanged();
+            }
+        });
+
 
         // fill default values
         onCrackLengthChanged();

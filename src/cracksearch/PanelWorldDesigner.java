@@ -14,6 +14,7 @@ import java.awt.geom.GeneralPath;
 import java.util.*;
 import java.util.List;
 
+import com.sun.org.apache.regexp.internal.RE;
 import cracksearch.util.Point;
 import cracksearch.world.Crack;
 import cracksearch.world.World;
@@ -31,11 +32,12 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     private static final int WAITING_FOR_INPUT = 1;
     private static final int SINGLE_SEGMENT_MODE = 2;
     private static final int MULTI_SEGMENT_MODE = 3;
-    private static final int SHOW_LAST_ROUTE_MODE = 4;
-    private static final int NUM_STATE_BITS = SHOW_LAST_ROUTE_MODE;
+    private static final int NUM_STATE_BITS = MULTI_SEGMENT_MODE;
 
     private static final int FIRST_CRACK_DRAWING_MODE = NOT_DRAWING;
     private static final int LAST_CRACK_DRAWING_MODE = MULTI_SEGMENT_MODE;
+
+    private static final int MAX_STORED_ROUTES = 2;
 
     World world;
     private BitSet worldState;
@@ -44,8 +46,9 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     private GeneralPath path;
     private final cracksearch.util.Point mouseLocation;
     private final List<SimulationFinishedListener> simFinishedListeners;
-    private Route lastRoute;
+    private Queue<Route> storedRoutes;
     private Crack selectedCrack;
+    private Color[] routeColours;
 
     public PanelWorldDesigner() {
         super();
@@ -55,10 +58,16 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         mouseLocation = new cracksearch.util.Point();
         setDoubleBuffered(true);    // TODO: try improve double buffering with BufferStrategy
         simFinishedListeners = new LinkedList<>();
+        storedRoutes = new LinkedList<>();
         // add listeners
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
         this.addKeyListener(this);
+        // route colours
+        routeColours = new Color[MAX_STORED_ROUTES];
+        routeColours[0] = Color.GREEN;
+        routeColours[1] = Color.RED;
+
 
     }
 
@@ -76,8 +85,9 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
      */
     public void setWorld(World w){
         world = w;
-        update(getGraphics());      // send draw request
+        clearStoredRoutes();
         clearSelectedCrack();
+        update(getGraphics());      // send draw request
     }
 
     @Override
@@ -90,8 +100,8 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         if (worldState.get(SINGLE_SEGMENT_MODE)) {
             paintDrawingCrack(g2d);
         }
-        if (worldState.get(SHOW_LAST_ROUTE_MODE)) {
-            paintLastRoute(g2d);
+        if (storedRoutes.size() > 0) {
+            paintStoredRoutes(g2d);
         }
         if (selectedCrack != null) {
             paintSelectedCrack(g2d);
@@ -129,25 +139,31 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
      * Draws the route stored in lastRoute variable
      * @param g Graphics object to draw too
      */
-    private void paintLastRoute(Graphics2D g) {
+    private void paintStoredRoutes(Graphics2D g) {
 
-        // sanity check
-        if (lastRoute.getSize() > 2) {
-            ListIterator<RouteSection> i = lastRoute.getLocations();
-            RouteSection location;
-            // add all other points to route
-            while (i.hasNext()) {
-                location = i.next();
-                // create next step in path
-                if (location.getType() == RouteSection.RouteType.CRACK) {
-                    g.setColor(Color.BLACK);
-                } else {
-                    g.setColor(Color.GREEN);
+        int colour_index = 0;
+        for (Route r: storedRoutes) {
+            // sanity check
+            if (r.getSize() > 2) {
+                ListIterator<RouteSection> i = r.getLocations();
+                RouteSection location;
+                // add all other points to route
+                while (i.hasNext()) {
+                    location = i.next();
+                    // create next step in path
+                    if (location.getType() == RouteSection.RouteType.CRACK) {
+                        g.setColor(Color.BLACK);
+                    } else {
+                        g.setColor(routeColours[colour_index]);
+                    }
+                    g.drawLine(location.getStartLocation().x, location.getStartLocation().y, location.getEndLocation().x, location.getEndLocation().y);
+
                 }
-                g.drawLine(location.getStartLocation().x, location.getStartLocation().y, location.getEndLocation().x, location.getEndLocation().y);
-
             }
+            colour_index++;
         }
+
+
         // make sure colour is back on black
         g.setColor(Color.BLACK);
     }
@@ -166,7 +182,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
      */
     public void deleteSelectedCrack() {
         if (selectedCrack != null) {
-            clearRoute();
+            clearStoredRoutes();
             world.removeCrack(selectedCrack);
             clearSelectedCrack();
             update(getGraphics());
@@ -303,14 +319,16 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
 
         // currently no animation, so simulation can finish immediately.
         // call the sim finished event to notify all listeners
-        lastRoute = world.getRoute();
+        storedRoutes.add(world.getRoute());
+        if (storedRoutes.size() > MAX_STORED_ROUTES) {
+            storedRoutes.remove();
+        }
         // draw the route on screen
-        worldState.set(SHOW_LAST_ROUTE_MODE);
         clearSelectedCrack();
         update(getGraphics());
 
         for (SimulationFinishedListener listener : simFinishedListeners) {
-            listener.onSimulationFinishedListener(lastRoute);
+            listener.onSimulationFinishedListener(world.getRoute());
         }
 
     }
@@ -323,11 +341,20 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     }
 
     /**
+     * Clears all stored routes
+     */
+    public void clearStoredRoutes() {
+        storedRoutes.clear();
+    }
+
+    /**
      * Stops drawing the last route
      */
-    public void clearRoute() {
-        worldState.set(SHOW_LAST_ROUTE_MODE, false);
-        update(getGraphics());
+    public void removeLastRoute() {
+        if (storedRoutes.size() > 0) {
+            storedRoutes.remove();
+            update(getGraphics());
+        }
     }
 
     /**
