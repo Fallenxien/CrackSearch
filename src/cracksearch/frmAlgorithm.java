@@ -107,7 +107,7 @@ public class frmAlgorithm implements AlgorithmListUpdatedListener, WindowListene
      * @param names names of algorithms to display
      */
     @Override
-    public void AlgorithmListUpdatedListener(String[] names) {
+    public void onAlgorithmListUpdatedListener(String[] names) {
         listModel.clear();
         for (String name:listLoader.getNames()) {
             listModel.addElement(name);

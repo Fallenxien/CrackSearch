@@ -14,10 +14,8 @@ import java.awt.geom.GeneralPath;
 import java.util.*;
 import java.util.List;
 
-import cracksearch.util.Line;
 import cracksearch.util.Point;
 import cracksearch.world.Crack;
-import cracksearch.world.FixedLengthWorldGenerator;
 import cracksearch.world.World;
 import cracksearch.algorithm.Route;
 import cracksearch.algorithm.RouteSection;
@@ -312,7 +310,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         update(getGraphics());
 
         for (SimulationFinishedListener listener : simFinishedListeners) {
-            listener.simulationFinished(lastRoute);
+            listener.onSimulationFinishedListener(lastRoute);
         }
 
     }

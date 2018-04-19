@@ -620,7 +620,7 @@ public class frmWorldDesigner implements SimulationFinishedListener, AlgorithmLi
      * @param r Route taken
      */
     @Override
-    public void simulationFinished(Route r) {
+    public void onSimulationFinishedListener(Route r) {
 
 
         onShowReportPressed(r);
@@ -645,7 +645,7 @@ public class frmWorldDesigner implements SimulationFinishedListener, AlgorithmLi
      * @param names array of names
      */
     @Override
-    public void AlgorithmListUpdatedListener(String[] names) {
+    public void onAlgorithmListUpdatedListener(String[] names) {
         updateAlgorithmEntries(names);
     }
 }

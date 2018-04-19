@@ -8,10 +8,10 @@
 package cracksearch;
 
 /**
- * AlgorithmListUpdatedListener
+ * onAlgorithmListUpdatedListener
  *
  * Called by cracksearch.frmAlgorithm to notify listeners the list of algorithms has changed
  */
 public interface AlgorithmListUpdatedListener {
-    void AlgorithmListUpdatedListener(String[] names);
+    void onAlgorithmListUpdatedListener(String[] names);
 }

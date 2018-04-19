@@ -249,7 +249,7 @@ public class ExplorationAlgorithmListLoader {
      */
     private void sendAlgorithmListChangedEvent(String[] names) {
         for (AlgorithmListUpdatedListener listener: algorithmListChangedListeners) {
-            listener.AlgorithmListUpdatedListener(names);
+            listener.onAlgorithmListUpdatedListener(names);
         }
     }
 

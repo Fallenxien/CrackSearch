@@ -14,5 +14,5 @@ import cracksearch.algorithm.Route;
  */
 public interface SimulationFinishedListener {
 
-    void simulationFinished(Route r);
+    void onSimulationFinishedListener(Route r);
 }
