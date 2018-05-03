@@ -14,7 +14,6 @@ import java.awt.geom.GeneralPath;
 import java.util.*;
 import java.util.List;
 
-import com.sun.org.apache.regexp.internal.RE;
 import cracksearch.util.Point;
 import cracksearch.world.Crack;
 import cracksearch.world.World;
@@ -28,19 +27,14 @@ import cracksearch.algorithm.RouteSection;
  */
 public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
 
-    private static final int NOT_DRAWING = 0;
-    private static final int WAITING_FOR_INPUT = 1;
-    private static final int SINGLE_SEGMENT_MODE = 2;
-    private static final int MULTI_SEGMENT_MODE = 3;
-    private static final int NUM_STATE_BITS = MULTI_SEGMENT_MODE;
-
-    private static final int FIRST_CRACK_DRAWING_MODE = NOT_DRAWING;
-    private static final int LAST_CRACK_DRAWING_MODE = MULTI_SEGMENT_MODE;
+    private enum DrawingMode {
+        NOT_DRAWING, WAITING_FOR_INPUT, SINGLE_SEGMENT_MODE, MULTI_SEGMENT_MODE
+    }
 
     private static final int MAX_STORED_ROUTES = 2;
 
     World world;
-    private BitSet worldState;
+    private DrawingMode drawingMode;
     private Point[] drawingPoints;
     private int currentDrawingPoint;
     private GeneralPath path;
@@ -53,8 +47,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     public PanelWorldDesigner() {
         super();
         world = new World();
-        worldState = new BitSet(NUM_STATE_BITS);
-        worldState.set(NOT_DRAWING);
+        drawingMode = DrawingMode.NOT_DRAWING;
         mouseLocation = new cracksearch.util.Point();
         setDoubleBuffered(true);    // TODO: try improve double buffering with BufferStrategy
         simFinishedListeners = new LinkedList<>();
@@ -97,7 +90,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke(2));
         world.drawWorld(g2d);
-        if (worldState.get(SINGLE_SEGMENT_MODE)) {
+        if (drawingMode == DrawingMode.SINGLE_SEGMENT_MODE) {
             paintDrawingCrack(g2d);
         }
         if (storedRoutes.size() > 0) {
@@ -173,8 +166,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
      * it should draw in.
      */
     public void enterDrawingMode() {
-        worldState.set(FIRST_CRACK_DRAWING_MODE, LAST_CRACK_DRAWING_MODE, false);
-        worldState.set(WAITING_FOR_INPUT);
+        drawingMode = DrawingMode.WAITING_FOR_INPUT;
     }
 
     /**
@@ -192,7 +184,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
     @Override
     public void mouseClicked(MouseEvent e) {
 
-        if (worldState.get(WAITING_FOR_INPUT)) {
+        if (drawingMode == DrawingMode.WAITING_FOR_INPUT) {
 
             if (e.isShiftDown()) {
                 // TODO: multi segment mode
@@ -201,20 +193,19 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
             } else {
                 startSingleSegmentDrawing(e);
             }
-        } else if (worldState.get(MULTI_SEGMENT_MODE)) {
+        } else if (drawingMode == DrawingMode.MULTI_SEGMENT_MODE) {
             if (e.isShiftDown()) {
                 addPoint(e);
             }
-        } else if (worldState.get(SINGLE_SEGMENT_MODE)) {
+        } else if (drawingMode == (DrawingMode.SINGLE_SEGMENT_MODE)) {
             addPoint(e);
             finishDrawing();
-        } else if (worldState.get(NOT_DRAWING)) {
+        } else if (drawingMode == DrawingMode.NOT_DRAWING) {
             selectedCrack = world.checkCrackCollision(new Point(e.getX(), e.getY()));
             if (selectedCrack != null) {
                 update(getGraphics());
             }
         }
-
     }
 
     /*
@@ -228,8 +219,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
      * @param e MouseEvent containing mouse position
      */
     /*private void startDrawingMultiSegment(MouseEvent e) {
-        worldState.set(FIRST_CRACK_DRAWING_MODE, LAST_CRACK_DRAWING_MODE, false);
-        worldState.set(MULTI_SEGMENT_MODE);
+        drawingMode = DrawingMode.MULTI_SEGMENT_MODE;
         drawingPoints = new cracksearch.util.Point[Crack.MAX_POINTS];
         currentDrawingPoint = 0;
         path = new GeneralPath();
@@ -244,8 +234,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
      * @param e MouseEvent containing mouse position
      */
     private void startSingleSegmentDrawing(MouseEvent e) {
-        worldState.set(FIRST_CRACK_DRAWING_MODE, LAST_CRACK_DRAWING_MODE, false);
-        worldState.set(SINGLE_SEGMENT_MODE);
+        drawingMode = DrawingMode.SINGLE_SEGMENT_MODE;
         drawingPoints = new cracksearch.util.Point[Crack.MAX_POINTS];
         currentDrawingPoint = 0;
         path = new GeneralPath();
@@ -278,8 +267,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
             world.addCrack(new Crack(tmp, length));
         }
         update(getGraphics());
-        worldState.set(FIRST_CRACK_DRAWING_MODE, LAST_CRACK_DRAWING_MODE, false);
-        worldState.set(NOT_DRAWING);
+        drawingMode = DrawingMode.NOT_DRAWING;
     }
 
     /**
@@ -393,7 +381,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         mouseLocation.x = e.getX();
         mouseLocation.y = e.getY();
         // only send updates when in drawing mode
-        if (worldState.get(SINGLE_SEGMENT_MODE)) {
+        if (drawingMode == DrawingMode.SINGLE_SEGMENT_MODE) {
             update(getGraphics());
         }
     }
