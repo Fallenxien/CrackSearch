@@ -24,11 +24,13 @@ import java.util.List;
  * World files are stored in the following format.
  * [SOH][width][height][num robots][num cracks][crack array]
  *
- * All numbers are stored as integer (4 bytes)
- *
  * Where crack array is continuous blocks each representing a crack. Each block
  * takes on the format:
  * [num points][crack length][x1][y1][x2][y2][xn][yn]
+ *
+ * All numbers except crack length are stored as integers. (4 bytes)
+ * Crack length is stored as a double. (8 bytes)
+ *
  */
 public class WorldReader {
 
