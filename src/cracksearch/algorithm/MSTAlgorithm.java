@@ -13,7 +13,6 @@ import java.util.Stack;
 
 import cracksearch.graph.*;
 import cracksearch.world.Crack;
-import cracksearch.util.*;
 
 /**
  * MSTAlgorithm
@@ -38,19 +37,17 @@ import cracksearch.util.*;
  * vertex in T to navigate along the edge and then back again. Once we have finished travelling along
  * the tree we return to the start position
  */
-public class MSTAlgorithm extends ExplorationAlgorithm {
+public class MSTAlgorithm implements ExplorationAlgorithm {
 
-    public MSTAlgorithm(List<Crack> cracks) {
-        super(cracks);
-
-    }
-
+    private List<Crack> cracks;
     /**
      * Calculates a route to navigate the cracks given via the constructor. The route created
      * is based upon finding a Minimal Spanning Tree.
      */
     @Override
-    public Route calculateRoute() {
+    public Route calculateRoute(List<Crack> cracks) {
+
+        this.cracks = cracks;
 
         if (cracks.size() > 0) {
 

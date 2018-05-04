@@ -18,39 +18,11 @@ import java.util.List;
  * Each implementation is required at minimum to extend calculateRoute and calculateRouteLength, based upon
  * the cracksearch.algorithm they are describing.
  */
-public abstract class ExplorationAlgorithm {
+public interface ExplorationAlgorithm {
 
-    protected List<Crack> cracks;
 
-    /**
-     * Required constructor for implementations to work as intended. Setups the mnodular level crack list.
-     * @param cracks List of cracks to explore
-     */
-    protected ExplorationAlgorithm(List<Crack> cracks) {
-        setCrackList(cracks);
-    }
 
-    /**
-     * Sets the crack list
-     * @param cracks List to set
-     */
-    private void setCrackList(List<Crack> cracks) {
-        this.cracks = cracks;
-    }
-
-    /**
-     * Returns the route calculated by the exploration cracksearch.algorithm
-     * @return Route between cracks
-     */
-    public Route getRoute() {
-        return calculateRoute();
-    }
-
-    /**
-     * Calculates a route to navigate the cracks given via the constructor. The route created
-     * will depend upon the cracksearch.algorithm used by the implementation.
-     */
-    protected abstract Route calculateRoute();
+    public Route calculateRoute(List<Crack> cracks);
 
     /**
      * Should be overridden by child class to return with the name

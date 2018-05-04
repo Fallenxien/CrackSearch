@@ -84,7 +84,7 @@ public class World {
      * @return Route taken
      */
     public Route getRoute() {
-        return explorationAlgorithm.getRoute();
+        return explorationAlgorithm.calculateRoute(new ArrayList<>(crackList));
     }
 
     /**
@@ -94,7 +94,7 @@ public class World {
     public void setExplorationAlgorithm(Class explorationAlgo) {
 
         try {
-            explorationAlgorithm = (ExplorationAlgorithm) explorationAlgo.getDeclaredConstructors()[0].newInstance(crackList);
+            explorationAlgorithm = (ExplorationAlgorithm) explorationAlgo.getDeclaredConstructors()[0].newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

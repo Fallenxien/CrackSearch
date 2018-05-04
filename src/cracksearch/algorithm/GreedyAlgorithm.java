@@ -28,17 +28,16 @@ import java.util.ListIterator;
  * 6) Navigate back to start position
  *
  */
-public class GreedyAlgorithm extends ExplorationAlgorithm {
+public class GreedyAlgorithm implements ExplorationAlgorithm {
 
-    public GreedyAlgorithm(List<Crack> cracks) {
-        super(cracks);
+    public GreedyAlgorithm() {
+
     }
 
     /**
      * Calculates a route to navigate the cracks given via the constructor.
      */
-    @Override
-    protected Route calculateRoute() {
+    public Route calculateRoute(List<Crack> cracks) {
 
         if (cracks.size() > 0) {
 

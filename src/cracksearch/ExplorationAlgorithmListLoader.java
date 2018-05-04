@@ -12,6 +12,7 @@ import cracksearch.algorithm.GreedyAlgorithm;
 import cracksearch.algorithm.MSTAlgorithm;
 
 import java.io.*;
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -123,7 +124,7 @@ public class ExplorationAlgorithmListLoader {
             ClassLoader cl = new URLClassLoader(new URL[]{parent.toURI().toURL()});
             Class c = cl.loadClass(stripExtension(f.getName()));
             // check super class matches
-            return (c.getSuperclass() == ExplorationAlgorithm.class);
+            return (checkForCorrectInterface(c.getInterfaces()));
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -136,6 +137,21 @@ public class ExplorationAlgorithmListLoader {
         // exception occurred,
         return false;
 
+    }
+
+    /**
+     * Checks if the ExplorationAlgorithm interface is present in the list of classes provoided
+     * @param interfaces List of classes to check
+     * @return true if ExplorationAlgorithm is present
+     */
+    private boolean checkForCorrectInterface(Class[] interfaces) {
+
+        for (Class c: interfaces) {
+            if (c.toString().equals(ExplorationAlgorithm.class.toString())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
