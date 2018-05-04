@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * MSTAlgorithm
+ * GreedyAlgorithm
  *
  * Implementation of the Exploration following Greedy principles.
  *
@@ -30,10 +30,6 @@ import java.util.ListIterator;
  */
 public class GreedyAlgorithm implements ExplorationAlgorithm {
 
-    public GreedyAlgorithm() {
-
-    }
-
     /**
      * Calculates a route to navigate the cracks given via the constructor.
      */
@@ -41,10 +37,8 @@ public class GreedyAlgorithm implements ExplorationAlgorithm {
 
         if (cracks.size() > 0) {
 
-            LinkedList<Crack> cracks_copy = new LinkedList<>(cracks);
-
             // run cracksearch.algorithm
-            return runGreedyAlgorithm(cracks_copy);
+            return runGreedyAlgorithm(cracks);
         }
 
         // no cracks, just return an empty route
