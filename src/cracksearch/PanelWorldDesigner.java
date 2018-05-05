@@ -138,19 +138,16 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
         for (Route r: storedRoutes) {
             // sanity check
             if (r.getSize() > 2) {
+                g.setColor(routeColours[colour_index]);
                 ListIterator<RouteSection> i = r.getLocations();
                 RouteSection location;
                 // add all other points to route
                 while (i.hasNext()) {
                     location = i.next();
                     // create next step in path
-                    if (location.getType() == RouteSection.RouteType.CRACK) {
-                        g.setColor(Color.BLACK);
-                    } else {
-                        g.setColor(routeColours[colour_index]);
+                    if (location.getType() != RouteSection.RouteType.CRACK) { // no need to draw cracks
+                        g.drawLine(location.getStartLocation().x, location.getStartLocation().y, location.getEndLocation().x, location.getEndLocation().y);
                     }
-                    g.drawLine(location.getStartLocation().x, location.getStartLocation().y, location.getEndLocation().x, location.getEndLocation().y);
-
                 }
             }
             colour_index++;
@@ -234,6 +231,7 @@ public class PanelWorldDesigner extends JPanel implements MouseListener, MouseMo
      * @param e MouseEvent containing mouse position
      */
     private void startSingleSegmentDrawing(MouseEvent e) {
+        clearStoredRoutes();
         drawingMode = DrawingMode.SINGLE_SEGMENT_MODE;
         drawingPoints = new cracksearch.util.Point[Crack.MAX_POINTS];
         currentDrawingPoint = 0;

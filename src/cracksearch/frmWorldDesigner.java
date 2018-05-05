@@ -426,7 +426,10 @@ public class frmWorldDesigner implements SimulationFinishedListener, AlgorithmLi
      */
     private void onRunSimulationPressed() {
         onAlgorithmChanged();
-        pnlDesigner.runSimulation();
+
+        Runnable task = () -> pnlDesigner.runSimulation();
+        Thread thread = new Thread(task);
+        thread.start();
     }
 
     /**
