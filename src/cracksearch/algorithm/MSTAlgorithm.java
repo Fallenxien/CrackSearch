@@ -59,7 +59,7 @@ public class MSTAlgorithm implements ExplorationAlgorithm {
                 g.addVertex(crack.getPoint(0));
             }
             // then complete the cracksearch.graph
-            Graph.completeGraph(g);
+            completeGraph(g);
             // create MST tree T
             Graph t = runKruskals(g);
             // create route
@@ -68,6 +68,34 @@ public class MSTAlgorithm implements ExplorationAlgorithm {
         }
 
         return new Route(0);
+    }
+
+    /**
+     * adds all edges to the current cracksearch.graph such that when the function finishes
+     * the graph is a 'complete' graph.
+     */
+    public static void completeGraph(Graph g) {
+
+        // make sure cracksearch.graph has at least 2 vertices
+        if (g.getNumVertices() >=  2) {
+
+            ListIterator<Vertex> i, j;      // two iterators to walk through list
+            int counter;                    // counts progression through iterator
+            Vertex v1, v2;                  // comparison placeholders
+
+            i = g.getVertexIterator();
+            counter = 1;
+            // for every vertex in list, connect it to every other vertex
+            while (i.hasNext()) {
+                v1 = i.next();
+                j = g.getVertexIterator(counter);
+                while (j.hasNext()) {
+                    v2 = j.next();
+                    g.addEdge(v1, v2);
+                }
+                counter++;
+            }
+        }
     }
 
     /**

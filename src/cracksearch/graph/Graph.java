@@ -114,6 +114,14 @@ public class Graph {
     }
 
     /**
+     * Gets a ListIterator containing vertices of the graph from a given offset
+     * @return Iterator over vertices
+     */
+    public ListIterator<Vertex> getVertexIterator(int offset) {
+        return verts.listIterator(offset);
+    }
+
+    /**
      * Gets the number of vertices in the graph
      * @return number of vertices
      */
@@ -164,35 +172,6 @@ public class Graph {
             }
         }
         return false;
-    }
-
-    /**
-     *
-     * adds all edges to the current cracksearch.graph such that when the function finishes
-     * the cracksearch.graph is a 'complete' cracksearch.graph.
-     */
-    public static void completeGraph(Graph g) {
-
-        // make sure cracksearch.graph has at least 2 vertices
-        if (g.getNumVertices() >=  2) {
-
-            ListIterator<Vertex> i, j;      // two iterators to walk through list
-            int counter;                    // counts progression through iterator
-            Vertex v1, v2;                  // comparison placeholders
-
-            i = g.verts.listIterator();
-            counter = 1;
-            // for every vertex in list, connect it to every other vertex
-            while (i.hasNext()) {
-                v1 = i.next();
-                j = g.verts.listIterator(counter);
-                while (j.hasNext()) {
-                    v2 = j.next();
-                    g.addEdge(v1, v2);
-                }
-                counter++;
-            }
-        }
     }
 
     /**
