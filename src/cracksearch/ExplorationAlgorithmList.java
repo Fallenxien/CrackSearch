@@ -12,7 +12,6 @@ import cracksearch.algorithm.GreedyAlgorithm;
 import cracksearch.algorithm.MSTAlgorithm;
 
 import java.io.*;
-import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,18 +21,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * ExplorationAlgorithmListLoader
+ * ExplorationAlgorithmList
  *
  * Singleton class used to manage the list of Exploration Algorithms.
  * The Greedy and MST algorithms will always be included in the list at indexes 0 and 1 respectively.
  * All other algorithms will placed at index 2+
  */
-public class ExplorationAlgorithmListLoader {
+public class ExplorationAlgorithmList {
 
     private final static String ALGO_FOLDER_NAME = "ExplorationAlgorithms/";
     private final static String ALGO_FOLDER_PATH = System.getenv("APPDATA") + frmWorldDesigner.APP_DATA_FOLDER + ALGO_FOLDER_NAME;
 
-    private static ExplorationAlgorithmListLoader instance = new ExplorationAlgorithmListLoader();
+    private static ExplorationAlgorithmList instance = new ExplorationAlgorithmList();
 
     private final List<AlgorithmListUpdatedListener> algorithmListChangedListeners;
     private final File algorithmFolder;
@@ -61,11 +60,11 @@ public class ExplorationAlgorithmListLoader {
      * Returns the instance of ExplorationAlgorithmLoader
      * @return instance of class
      */
-    public static ExplorationAlgorithmListLoader getInstance() {
+    public static ExplorationAlgorithmList getInstance() {
         return instance;
     }
 
-    private ExplorationAlgorithmListLoader() {
+    private ExplorationAlgorithmList() {
 
         algorithmListChangedListeners = new LinkedList<>();
         // set up cracksearch.algorithm folder

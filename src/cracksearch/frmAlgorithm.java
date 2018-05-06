@@ -7,9 +7,6 @@
 
 package cracksearch;
 
-import cracksearch.AlgorithmListUpdatedListener;
-import cracksearch.ExplorationAlgorithmListLoader;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.WindowEvent;
@@ -30,7 +27,7 @@ public class frmAlgorithm implements AlgorithmListUpdatedListener, WindowListene
     private JPanel pnlContainer;
 
     private DefaultListModel<String> listModel;
-    private ExplorationAlgorithmListLoader listLoader;
+    private ExplorationAlgorithmList listLoader;
 
     public frmAlgorithm() {
         frame = new JFrame("Custom Algorithms");
@@ -39,7 +36,7 @@ public class frmAlgorithm implements AlgorithmListUpdatedListener, WindowListene
         frame.pack();
 
         // setup cracksearch.algorithm list loader
-        listLoader = ExplorationAlgorithmListLoader.getInstance();
+        listLoader = ExplorationAlgorithmList.getInstance();
         listLoader.addAlgorithmListUpdatedListener(this);
 
         // create list model

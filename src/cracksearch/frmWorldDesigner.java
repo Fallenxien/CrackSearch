@@ -52,7 +52,7 @@ public class frmWorldDesigner implements SimulationFinishedListener, AlgorithmLi
     private Properties settings;
 
     private File worldFile;
-    private ExplorationAlgorithmListLoader listLoader;
+    private ExplorationAlgorithmList listLoader;
 
     /**
      * Initial Constructor, called from main.java
@@ -75,7 +75,7 @@ public class frmWorldDesigner implements SimulationFinishedListener, AlgorithmLi
         frame.setResizable(false);
 
         // list loader
-        listLoader = ExplorationAlgorithmListLoader.getInstance();
+        listLoader = ExplorationAlgorithmList.getInstance();
         listLoader.addAlgorithmListUpdatedListener(this);
 
         // report frame

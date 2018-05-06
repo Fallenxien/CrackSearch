@@ -7,6 +7,7 @@
 
 package cracksearch.algorithm;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
@@ -81,7 +82,7 @@ public class MSTAlgorithm implements ExplorationAlgorithm {
 
             ListIterator<Vertex> i, j;      // two iterators to walk through list
             int counter;                    // counts progression through iterator
-            Vertex v1, v2;                  // comparison placeholders
+            Vertex v1, v2;                  // placeholders
 
             i = g.getVertexIterator();
             counter = 1;
@@ -189,11 +190,11 @@ public class MSTAlgorithm implements ExplorationAlgorithm {
      * @param parent Parent node, used to make sure we arent trying to walk back to parent
      * @return true if cracksearch.graph contains cycles
      */
-    private boolean checkForCyclesUtil(Vertex v, Stack<Vertex> visited, Vertex parent) {
+    private boolean checkForCyclesUtil(Vertex v, Collection<Vertex> visited, Vertex parent) {
 
         // mark current node as visited
         if (!visited.contains(v)) {
-            visited.push(v);
+            visited.add(v);
         } else {
             // node is visited already, cycle exists
             return true;
