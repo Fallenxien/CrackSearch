@@ -21,18 +21,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * ExplorationAlgorithmList
+ * ExplorationAlgorithmListManager
  *
  * Singleton class used to manage the list of Exploration Algorithms.
  * The Greedy and MST algorithms will always be included in the list at indexes 0 and 1 respectively.
  * All other algorithms will placed at index 2+
  */
-public class ExplorationAlgorithmList {
+public class ExplorationAlgorithmListManager {
 
     private final static String ALGO_FOLDER_NAME = "ExplorationAlgorithms/";
     private final static String ALGO_FOLDER_PATH = System.getenv("APPDATA") + frmWorldDesigner.APP_DATA_FOLDER + ALGO_FOLDER_NAME;
 
-    private static ExplorationAlgorithmList instance = new ExplorationAlgorithmList();
+    private static ExplorationAlgorithmListManager instance = new ExplorationAlgorithmListManager();
 
     private final List<AlgorithmListUpdatedListener> algorithmListChangedListeners;
     private final File algorithmFolder;
@@ -60,11 +60,11 @@ public class ExplorationAlgorithmList {
      * Returns the instance of ExplorationAlgorithmLoader
      * @return instance of class
      */
-    public static ExplorationAlgorithmList getInstance() {
+    public static ExplorationAlgorithmListManager getInstance() {
         return instance;
     }
 
-    private ExplorationAlgorithmList() {
+    private ExplorationAlgorithmListManager() {
 
         algorithmListChangedListeners = new LinkedList<>();
         // set up cracksearch.algorithm folder

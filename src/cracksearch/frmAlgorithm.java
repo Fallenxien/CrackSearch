@@ -27,7 +27,7 @@ public class frmAlgorithm implements AlgorithmListUpdatedListener, WindowListene
     private JPanel pnlContainer;
 
     private DefaultListModel<String> listModel;
-    private ExplorationAlgorithmList listLoader;
+    private ExplorationAlgorithmListManager listLoader;
 
     public frmAlgorithm() {
         frame = new JFrame("Custom Algorithms");
@@ -36,7 +36,7 @@ public class frmAlgorithm implements AlgorithmListUpdatedListener, WindowListene
         frame.pack();
 
         // setup cracksearch.algorithm list loader
-        listLoader = ExplorationAlgorithmList.getInstance();
+        listLoader = ExplorationAlgorithmListManager.getInstance();
         listLoader.addAlgorithmListUpdatedListener(this);
 
         // create list model
